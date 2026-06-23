@@ -42,6 +42,10 @@ button {
   font-size: 16px;
 }
 
+input {
+  min-width: 250px;
+}
+
 button {
   background: #2c7be5;
   color: white;
@@ -70,38 +74,104 @@ canvas {
   border-radius: 8px;
 }
 
-/* MODO MÚSICO EM TELA CHEIA */
+/* ========================= */
+/* MODO MÚSICO */
+/* ========================= */
 
 .modo-musico header,
 .modo-musico .painel,
 .modo-musico #painelLider,
-.modo-musico #tituloPainel,
-.modo-musico #infoPagina {
+.modo-musico #tituloPainel {
   display: none !important;
 }
 
-.modo-musico body {
-  background: #000;
+/* CELULAR E TABLET */
+
+@media (max-width: 1024px) {
+
+  .modo-musico #infoPagina {
+    display: none !important;
+  }
+
+  .modo-musico main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .modo-musico .visualizador {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    background: #000 !important;
+  }
+
+  .modo-musico canvas {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    display: block;
+    border-radius: 0 !important;
+  }
 }
 
-.modo-musico main {
-  padding: 0 !important;
-  margin: 0 !important;
+/* COMPUTADOR */
+
+@media (min-width: 1025px) {
+
+  .modo-musico {
+    background: #111;
+  }
+
+  .modo-musico main {
+    padding: 20px;
+  }
+
+  .modo-musico #infoPagina {
+    display: block !important;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  .modo-musico .visualizador {
+    max-width: 1000px;
+    margin: auto;
+    padding: 15px;
+    border-radius: 12px;
+    background: #222;
+  }
+
+  .modo-musico canvas {
+    width: 100%;
+    max-width: 900px;
+    border-radius: 8px;
+  }
 }
 
-.modo-musico .visualizador {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  background: #000 !important;
+/* ========================= */
+/* MODO ADMIN */
+/* ========================= */
+
+#painelAdmin {
+  background: #222;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
-.modo-musico canvas {
-  width: 100% !important;
-  max-width: none !important;
-  height: auto !important;
+#painelAdmin input {
   display: block;
-  border-radius: 0 !important;
+  width: 90%;
+  max-width: 500px;
+  margin: 10px auto;
+}
+
+#painelAdmin button {
+  margin-top: 10px;
+}
+
+#mensagemAdmin {
+  margin-top: 10px;
+  font-weight: bold;
 }
