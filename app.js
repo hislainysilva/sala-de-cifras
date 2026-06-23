@@ -63,6 +63,14 @@ function atualizarLista(lista) {
     option.textContent = cifra.nome;
     pdfSelect.appendChild(option);
   });
+
+  if (lista.length === 0) {
+    const option = document.createElement("option");
+    option.textContent = "Nenhuma cifra encontrada";
+    option.disabled = true;
+    pdfSelect.appendChild(option);
+  }
+}
 }
   const resposta = await fetch("/cifras.json");
   const cifras = await resposta.json();
