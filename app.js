@@ -39,9 +39,11 @@ let ultimoEstado = null;
 let todasCifras = [];
 
 if (modoLider) {
+  document.body.classList.add("modo-lider");
   tituloPainel.innerText = "Painel do Líder";
   painelLider.style.display = "block";
 } else {
+  document.body.classList.add("modo-musico");
   tituloPainel.innerText = "Painel do Músico";
   painelLider.style.display = "none";
 }
