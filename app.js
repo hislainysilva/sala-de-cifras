@@ -30,8 +30,8 @@ const infoPagina = document.getElementById("infoPagina");
 const canvas = document.getElementById("pdfCanvas");
 const ctx = canvas.getContext("2d");
 
-const caminho = window.location.pathname;
-const modoLider = caminho.includes("lider");
+const parametros = new URLSearchParams(window.location.search);
+const modoLider = parametros.get("modo") === "lider";
 
 let pdfDoc = null;
 let ultimoEstado = null;
