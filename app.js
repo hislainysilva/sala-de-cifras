@@ -20,6 +20,21 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const pdfSelect = document.getElementById("pdfSelect");
+async function carregarCifras() {
+  const resposta = await fetch("cifras.json");
+  const cifras = await resposta.json();
+
+  pdfSelect.innerHTML = "";
+
+  cifras.forEach(cifra => {
+    const option = document.createElement("option");
+    option.value = cifra.arquivo;
+    option.textContent = cifra.nome;
+    pdfSelect.appendChild(option);
+  });
+}
+
+carregarCifras();
 const btnAbrir = document.getElementById("btnAbrir");
 const btnAnterior = document.getElementById("btnAnterior");
 const btnProxima = document.getElementById("btnProxima");
