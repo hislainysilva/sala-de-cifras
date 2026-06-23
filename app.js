@@ -20,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const pdfSelect = document.getElementById("pdfSelect");
+const buscaCifra = document.getElementById("buscaCifra");
 const painelLider = document.getElementById("painelLider");
 const tituloPainel = document.getElementById("tituloPainel");
 const btnAbrir = document.getElementById("btnAbrir");
@@ -44,7 +45,25 @@ if (modoLider) {
   painelLider.style.display = "none";
 }
 
+let todasCifras = [];
+
 async function carregarCifras() {
+  const resposta = await fetch("cifras.json");
+  todasCifras = await resposta.json();
+
+  atualizarLista(todasCifras);
+}
+
+function atualizarLista(lista) {
+  pdfSelect.innerHTML = "";
+
+  lista.forEach(cifra => {
+    const option = document.createElement("option");
+    option.value = cifra.arquivo;
+    option.textContent = cifra.nome;
+    pdfSelect.appendChild(option);
+  });
+}
   const resposta = await fetch("/cifras.json");
   const cifras = await resposta.json();
 
@@ -59,6 +78,15 @@ async function carregarCifras() {
 }
 
 carregarCifras();
+buscaCifra.addEventListener("input", () => {
+  const texto = buscaCifra.value.toLowerCase();
+
+  const filtradas = todasCifras.filter(cifra =>
+    cifra.nome.toLowerCase().includes(texto)
+  );
+
+  atualizarLista(filtradas);
+});
 
 async function renderizarPDF(arquivo, pagina) {
   try {
