@@ -3,6 +3,7 @@ import {
   getDatabase,
   ref,
   set,
+  push,
   onValue
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -22,39 +23,82 @@ const db = getDatabase(app);
 const pdfSelect = document.getElementById("pdfSelect");
 const buscaCifra = document.getElementById("buscaCifra");
 const painelLider = document.getElementById("painelLider");
+const painelAdmin = document.getElementById("painelAdmin");
 const tituloPainel = document.getElementById("tituloPainel");
+
 const btnAbrir = document.getElementById("btnAbrir");
 const btnAnterior = document.getElementById("btnAnterior");
 const btnProxima = document.getElementById("btnProxima");
 const infoPagina = document.getElementById("infoPagina");
 
+const nomeNovaCifra = document.getElementById("nomeNovaCifra");
+const arquivoNovaCifra = document.getElementById("arquivoNovaCifra");
+const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
+const mensagemAdmin = document.getElementById("mensagemAdmin");
+
 const canvas = document.getElementById("pdfCanvas");
 const ctx = canvas.getContext("2d");
 
 const parametros = new URLSearchParams(window.location.search);
-const modoLider = parametros.get("modo") === "lider";
+const modo = parametros.get("modo");
+const modoLider = modo === "lider";
+const modoMusico = modo === "musico";
+const modoAdmin = modo === "admin";
 
 let pdfDoc = null;
 let ultimoEstado = null;
+let cifrasFixas = [];
+let cifrasAdmin = [];
 let todasCifras = [];
 
 if (modoLider) {
   document.body.classList.add("modo-lider");
   tituloPainel.innerText = "Painel do Líder";
   painelLider.style.display = "block";
+  painelAdmin.style.display = "none";
+} else if (modoAdmin) {
+  document.body.classList.add("modo-admin");
+  tituloPainel.innerText = "Administração";
+  painelLider.style.display = "none";
+  painelAdmin.style.display = "block";
 } else {
   document.body.classList.add("modo-musico");
   tituloPainel.innerText = "Painel do Músico";
   painelLider.style.display = "none";
+  painelAdmin.style.display = "none";
 }
 
-async function carregarCifras() {
+async function carregarCifrasFixas() {
   const resposta = await fetch("/cifras.json");
-  todasCifras = await resposta.json();
+  cifrasFixas = await resposta.json();
+  juntarCifras();
+}
+
+function carregarCifrasAdmin() {
+  onValue(ref(db, "cifras"), (snapshot) => {
+    const dados = snapshot.val();
+
+    if (!dados) {
+      cifrasAdmin = [];
+    } else {
+      cifrasAdmin = Object.values(dados);
+    }
+
+    juntarCifras();
+  });
+}
+
+function juntarCifras() {
+  todasCifras = [...cifrasFixas, ...cifrasAdmin];
+
+  todasCifras.sort((a, b) => a.nome.localeCompare(b.nome));
+
   atualizarLista(todasCifras);
 }
 
 function atualizarLista(lista) {
+  if (!pdfSelect) return;
+
   pdfSelect.innerHTML = "";
 
   lista.forEach(cifra => {
@@ -72,7 +116,8 @@ function atualizarLista(lista) {
   }
 }
 
-carregarCifras();
+carregarCifrasFixas();
+carregarCifrasAdmin();
 
 if (buscaCifra) {
   buscaCifra.addEventListener("input", () => {
@@ -83,6 +128,27 @@ if (buscaCifra) {
     );
 
     atualizarLista(filtradas);
+  });
+}
+
+if (btnAdicionarCifra) {
+  btnAdicionarCifra.addEventListener("click", async () => {
+    const nome = nomeNovaCifra.value.trim();
+    const arquivo = arquivoNovaCifra.value.trim();
+
+    if (!nome || !arquivo) {
+      mensagemAdmin.innerText = "Preencha o nome da música e o nome do PDF.";
+      return;
+    }
+
+    await push(ref(db, "cifras"), {
+      nome: nome,
+      arquivo: arquivo
+    });
+
+    nomeNovaCifra.value = "";
+    arquivoNovaCifra.value = "";
+    mensagemAdmin.innerText = "Cifra adicionada com sucesso!";
   });
 }
 
@@ -111,35 +177,41 @@ async function renderizarPDF(arquivo, pagina) {
   }
 }
 
-btnAbrir.addEventListener("click", async () => {
-  await set(ref(db, "sala"), {
-    pdf: pdfSelect.value,
-    pagina: 1
+if (btnAbrir) {
+  btnAbrir.addEventListener("click", async () => {
+    await set(ref(db, "sala"), {
+      pdf: pdfSelect.value,
+      pagina: 1
+    });
   });
-});
+}
 
-btnAnterior.addEventListener("click", async () => {
-  if (!ultimoEstado) return;
+if (btnAnterior) {
+  btnAnterior.addEventListener("click", async () => {
+    if (!ultimoEstado) return;
 
-  const atual = ultimoEstado.pagina || 1;
-  if (atual <= 1) return;
+    const atual = ultimoEstado.pagina || 1;
+    if (atual <= 1) return;
 
-  await set(ref(db, "sala"), {
-    pdf: ultimoEstado.pdf,
-    pagina: atual - 1
+    await set(ref(db, "sala"), {
+      pdf: ultimoEstado.pdf,
+      pagina: atual - 1
+    });
   });
-});
+}
 
-btnProxima.addEventListener("click", async () => {
-  if (!ultimoEstado) return;
+if (btnProxima) {
+  btnProxima.addEventListener("click", async () => {
+    if (!ultimoEstado) return;
 
-  const atual = ultimoEstado.pagina || 1;
+    const atual = ultimoEstado.pagina || 1;
 
-  await set(ref(db, "sala"), {
-    pdf: ultimoEstado.pdf,
-    pagina: atual + 1
+    await set(ref(db, "sala"), {
+      pdf: ultimoEstado.pdf,
+      pagina: atual + 1
+    });
   });
-});
+}
 
 onValue(ref(db, "sala"), async (snapshot) => {
   const dados = snapshot.val();
