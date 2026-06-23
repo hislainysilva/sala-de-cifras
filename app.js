@@ -20,8 +20,32 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const pdfSelect = document.getElementById("pdfSelect");
+const painelLider = document.getElementById("painelLider");
+const tituloPainel = document.getElementById("tituloPainel");
+const btnAbrir = document.getElementById("btnAbrir");
+const btnAnterior = document.getElementById("btnAnterior");
+const btnProxima = document.getElementById("btnProxima");
+const infoPagina = document.getElementById("infoPagina");
+
+const canvas = document.getElementById("pdfCanvas");
+const ctx = canvas.getContext("2d");
+
+const caminho = window.location.pathname;
+const modoLider = caminho.includes("lider");
+
+let pdfDoc = null;
+let ultimoEstado = null;
+
+if (modoLider) {
+  tituloPainel.innerText = "Painel do Líder";
+  painelLider.style.display = "block";
+} else {
+  tituloPainel.innerText = "Painel do Músico";
+  painelLider.style.display = "none";
+}
+
 async function carregarCifras() {
-  const resposta = await fetch("cifras.json");
+  const resposta = await fetch("/cifras.json");
   const cifras = await resposta.json();
 
   pdfSelect.innerHTML = "";
@@ -35,22 +59,15 @@ async function carregarCifras() {
 }
 
 carregarCifras();
-const btnAbrir = document.getElementById("btnAbrir");
-const btnAnterior = document.getElementById("btnAnterior");
-const btnProxima = document.getElementById("btnProxima");
-const infoPagina = document.getElementById("infoPagina");
-
-const canvas = document.getElementById("pdfCanvas");
-const ctx = canvas.getContext("2d");
-
-let pdfDoc = null;
 
 async function renderizarPDF(arquivo, pagina) {
   try {
-    pdfDoc = await pdfjsLib.getDocument(`pdfs/${arquivo}`).promise;
+    pdfDoc = await pdfjsLib.getDocument(`/pdfs/${arquivo}`).promise;
+
+    if (pagina < 1) pagina = 1;
+    if (pagina > pdfDoc.numPages) pagina = pdfDoc.numPages;
 
     const page = await pdfDoc.getPage(pagina);
-
     const viewport = page.getViewport({ scale: 1.5 });
 
     canvas.height = viewport.height;
@@ -61,9 +78,10 @@ async function renderizarPDF(arquivo, pagina) {
       viewport
     }).promise;
 
-    infoPagina.innerText = `Página ${pagina}`;
+    infoPagina.innerText = `Página ${pagina} de ${pdfDoc.numPages}`;
   } catch (erro) {
     console.error(erro);
+    infoPagina.innerText = "Erro ao carregar a cifra.";
   }
 }
 
@@ -75,8 +93,9 @@ btnAbrir.addEventListener("click", async () => {
 });
 
 btnAnterior.addEventListener("click", async () => {
-  const atual = ultimoEstado?.pagina || 1;
+  if (!ultimoEstado) return;
 
+  const atual = ultimoEstado.pagina || 1;
   if (atual <= 1) return;
 
   await set(ref(db, "sala"), {
@@ -86,15 +105,15 @@ btnAnterior.addEventListener("click", async () => {
 });
 
 btnProxima.addEventListener("click", async () => {
-  const atual = ultimoEstado?.pagina || 1;
+  if (!ultimoEstado) return;
+
+  const atual = ultimoEstado.pagina || 1;
 
   await set(ref(db, "sala"), {
     pdf: ultimoEstado.pdf,
     pagina: atual + 1
   });
 });
-
-let ultimoEstado = null;
 
 onValue(ref(db, "sala"), async (snapshot) => {
   const dados = snapshot.val();
@@ -103,8 +122,5 @@ onValue(ref(db, "sala"), async (snapshot) => {
 
   ultimoEstado = dados;
 
-  await renderizarPDF(
-    dados.pdf,
-    dados.pagina
-  );
+  await renderizarPDF(dados.pdf, dados.pagina);
 });
