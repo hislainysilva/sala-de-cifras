@@ -48,7 +48,7 @@ if (modoLider) {
 let todasCifras = [];
 
 async function carregarCifras() {
-  const resposta = await fetch("cifras.json");
+ const resposta = await fetch("/cifras.json");
   todasCifras = await resposta.json();
 
   atualizarLista(todasCifras);
@@ -86,15 +86,17 @@ function atualizarLista(lista) {
 }
 
 carregarCifras();
-buscaCifra.addEventListener("input", () => {
-  const texto = buscaCifra.value.toLowerCase();
+if (buscaCifra) {
+  buscaCifra.addEventListener("input", () => {
+    const texto = buscaCifra.value.toLowerCase();
 
-  const filtradas = todasCifras.filter(cifra =>
-    cifra.nome.toLowerCase().includes(texto)
-  );
+    const filtradas = todasCifras.filter(cifra =>
+      cifra.nome.toLowerCase().includes(texto)
+    );
 
-  atualizarLista(filtradas);
-});
+    atualizarLista(filtradas);
+  });
+}
 
 async function renderizarPDF(arquivo, pagina) {
   try {
