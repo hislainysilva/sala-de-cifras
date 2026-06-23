@@ -36,6 +36,7 @@ const modoLider = parametros.get("modo") === "lider";
 
 let pdfDoc = null;
 let ultimoEstado = null;
+let todasCifras = [];
 
 if (modoLider) {
   tituloPainel.innerText = "Painel do Líder";
@@ -45,12 +46,9 @@ if (modoLider) {
   painelLider.style.display = "none";
 }
 
-let todasCifras = [];
-
 async function carregarCifras() {
- const resposta = await fetch("/cifras.json");
+  const resposta = await fetch("/cifras.json");
   todasCifras = await resposta.json();
-
   atualizarLista(todasCifras);
 }
 
@@ -71,21 +69,9 @@ function atualizarLista(lista) {
     pdfSelect.appendChild(option);
   }
 }
-}
-  const resposta = await fetch("/cifras.json");
-  const cifras = await resposta.json();
-
-  pdfSelect.innerHTML = "";
-
-  cifras.forEach(cifra => {
-    const option = document.createElement("option");
-    option.value = cifra.arquivo;
-    option.textContent = cifra.nome;
-    pdfSelect.appendChild(option);
-  });
-}
 
 carregarCifras();
+
 if (buscaCifra) {
   buscaCifra.addEventListener("input", () => {
     const texto = buscaCifra.value.toLowerCase();
@@ -159,6 +145,5 @@ onValue(ref(db, "sala"), async (snapshot) => {
   if (!dados) return;
 
   ultimoEstado = dados;
-
   await renderizarPDF(dados.pdf, dados.pagina);
 });
