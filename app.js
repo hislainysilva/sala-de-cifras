@@ -4,6 +4,7 @@ import {
   ref,
   set,
   push,
+  remove,
   onValue
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -42,7 +43,6 @@ const ctx = canvas.getContext("2d");
 const parametros = new URLSearchParams(window.location.search);
 const modo = parametros.get("modo");
 const modoLider = modo === "lider";
-const modoMusico = modo === "musico";
 const modoAdmin = modo === "admin";
 
 let pdfDoc = null;
@@ -81,15 +81,25 @@ function carregarCifrasAdmin() {
     if (!dados) {
       cifrasAdmin = [];
     } else {
-      cifrasAdmin = Object.values(dados);
+      cifrasAdmin = Object.entries(dados).map(([id, cifra]) => ({
+        id,
+        ...cifra,
+        origem: "admin"
+      }));
     }
 
     juntarCifras();
+    mostrarCifrasAdmin();
   });
 }
 
 function juntarCifras() {
-  todasCifras = [...cifrasFixas, ...cifrasAdmin];
+  const fixasComOrigem = cifrasFixas.map(cifra => ({
+    ...cifra,
+    origem: "json"
+  }));
+
+  todasCifras = [...fixasComOrigem, ...cifrasAdmin];
 
   todasCifras.sort((a, b) => a.nome.localeCompare(b.nome));
 
@@ -114,6 +124,49 @@ function atualizarLista(lista) {
     option.disabled = true;
     pdfSelect.appendChild(option);
   }
+}
+
+function mostrarCifrasAdmin() {
+  if (!painelAdmin) return;
+
+  let listaAdmin = document.getElementById("listaCifrasAdmin");
+
+  if (!listaAdmin) {
+    listaAdmin = document.createElement("div");
+    listaAdmin.id = "listaCifrasAdmin";
+    painelAdmin.appendChild(listaAdmin);
+  }
+
+  listaAdmin.innerHTML = "<h3>Cifras adicionadas pelo Admin</h3>";
+
+  if (cifrasAdmin.length === 0) {
+    listaAdmin.innerHTML += "<p>Nenhuma cifra adicionada pelo Admin.</p>";
+    return;
+  }
+
+  cifrasAdmin.forEach(cifra => {
+    const item = document.createElement("div");
+    item.className = "item-cifra-admin";
+
+    item.innerHTML = `
+      <span>${cifra.nome}</span>
+      <button class="btn-excluir" data-id="${cifra.id}">Excluir</button>
+    `;
+
+    listaAdmin.appendChild(item);
+  });
+
+  document.querySelectorAll(".btn-excluir").forEach(botao => {
+    botao.addEventListener("click", async () => {
+      const id = botao.getAttribute("data-id");
+
+      const confirmar = confirm("Tem certeza que deseja excluir esta cifra?");
+      if (!confirmar) return;
+
+      await remove(ref(db, "cifras/" + id));
+      mensagemAdmin.innerText = "Cifra excluída com sucesso!";
+    });
+  });
 }
 
 carregarCifrasFixas();
@@ -142,8 +195,8 @@ if (btnAdicionarCifra) {
     }
 
     await push(ref(db, "cifras"), {
-      nome: nome,
-      arquivo: arquivo
+      nome,
+      arquivo
     });
 
     nomeNovaCifra.value = "";
