@@ -21,29 +21,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const pdfSelect = document.getElementById("pdfSelect");
-const buscaCifra = document.getElementById("buscaCifra");
-const painelLider = document.getElementById("painelLider");
-const painelAdmin = document.getElementById("painelAdmin");
-const tituloPainel = document.getElementById("tituloPainel");
-
-const btnAbrir = document.getElementById("btnAbrir");
-const btnAnterior = document.getElementById("btnAnterior");
-const btnProxima = document.getElementById("btnProxima");
-const infoPagina = document.getElementById("infoPagina");
-
-const nomeNovaCifra = document.getElementById("nomeNovaCifra");
-const arquivoNovaCifra = document.getElementById("arquivoNovaCifra");
-const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
-const mensagemAdmin = document.getElementById("mensagemAdmin");
-
-const canvas = document.getElementById("pdfCanvas");
-const ctx = canvas.getContext("2d");
-
 const parametros = new URLSearchParams(window.location.search);
-const modo = parametros.get("modo");
+const modo = parametros.get("modo") || "musico";
+
 const modoLider = modo === "lider";
 const modoAdmin = modo === "admin";
+
 const SENHA_LIDER = "louvor2025";
 const SENHA_ADMIN = "admin2025";
 
@@ -53,56 +36,25 @@ const senhaLogin = document.getElementById("senhaLogin");
 const btnEntrarLogin = document.getElementById("btnEntrarLogin");
 const erroLogin = document.getElementById("erroLogin");
 
-function liberarAcesso() {
-  telaLogin.style.display = "none";
+const painelAdmin = document.getElementById("painelAdmin");
+const painelLider = document.getElementById("painelLider");
+const tituloPainel = document.getElementById("tituloPainel");
 
-  if (modoLider) {
-    document.body.classList.add("modo-lider");
-    tituloPainel.innerText = "Painel do Líder";
-    painelLider.style.display = "block";
-    painelAdmin.style.display = "none";
-  } else if (modoAdmin) {
-    document.body.classList.add("modo-admin");
-    tituloPainel.innerText = "Administração";
-    painelLider.style.display = "none";
-    painelAdmin.style.display = "block";
-  } else {
-    document.body.classList.add("modo-musico");
-    tituloPainel.innerText = "Painel do Músico";
-    painelLider.style.display = "none";
-    painelAdmin.style.display = "none";
-  }
-}
+const pdfSelect = document.getElementById("pdfSelect");
+const buscaCifra = document.getElementById("buscaCifra");
 
-if (modoLider || modoAdmin) {
-  telaLogin.style.display = "flex";
+const btnAbrir = document.getElementById("btnAbrir");
+const btnAnterior = document.getElementById("btnAnterior");
+const btnProxima = document.getElementById("btnProxima");
 
-  tituloLogin.innerText = modoLider
-    ? "Acesso do Líder"
-    : "Acesso do Administrador";
+const nomeNovaCifra = document.getElementById("nomeNovaCifra");
+const arquivoNovaCifra = document.getElementById("arquivoNovaCifra");
+const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
+const mensagemAdmin = document.getElementById("mensagemAdmin");
 
-  btnEntrarLogin.addEventListener("click", () => {
-    const senhaDigitada = senhaLogin.value;
-
-    if (modoLider && senhaDigitada === SENHA_LIDER) {
-      liberarAcesso();
-    } else if (modoAdmin && senhaDigitada === SENHA_ADMIN) {
-      liberarAcesso();
-    } else {
-      erroLogin.innerText = "Senha incorreta!";
-    }
-  });
-
-  senhaLogin.addEventListener("keydown", (evento) => {
-    if (evento.key === "Enter") {
-      btnEntrarLogin.click();
-    }
-  });
-
-} else {
-  telaLogin.style.display = "none";
-  liberarAcesso();
-}
+const infoPagina = document.getElementById("infoPagina");
+const canvas = document.getElementById("pdfCanvas");
+const ctx = canvas.getContext("2d");
 
 let pdfDoc = null;
 let ultimoEstado = null;
@@ -110,48 +62,70 @@ let cifrasFixas = [];
 let cifrasAdmin = [];
 let todasCifras = [];
 
-if (modoLider) {
+function configurarInterface() {
+  painelAdmin.style.display = "none";
+  painelLider.style.display = "none";
 
-  
-
-    if (senha !== SENHA_LIDER) {
-        alert("Senha incorreta!");
-        window.location.href = "/";
-        throw new Error("Acesso negado");
-    }
-
+  if (modoLider) {
     document.body.classList.add("modo-lider");
     tituloPainel.innerText = "Painel do Líder";
     painelLider.style.display = "block";
-    painelAdmin.style.display = "none";
-
-} else if (modoAdmin) {
-
-  
-
-    if (senha !== SENHA_ADMIN) {
-        alert("Senha incorreta!");
-        window.location.href = "/";
-        throw new Error("Acesso negado");
-    }
-
+  } else if (modoAdmin) {
     document.body.classList.add("modo-admin");
     tituloPainel.innerText = "Administração";
-    painelLider.style.display = "none";
     painelAdmin.style.display = "block";
-
-} else {
-
+  } else {
     document.body.classList.add("modo-musico");
     tituloPainel.innerText = "Painel do Músico";
-    painelLider.style.display = "none";
-    painelAdmin.style.display = "none";
+  }
+}
+
+function liberarAcesso() {
+  telaLogin.style.display = "none";
+  configurarInterface();
+}
+
+function iniciarLogin() {
+  if (modoLider || modoAdmin) {
+    telaLogin.style.display = "flex";
+
+    tituloLogin.innerText = modoLider
+      ? "Acesso do Líder"
+      : "Acesso do Administrador";
+
+    btnEntrarLogin.addEventListener("click", () => {
+      const senhaDigitada = senhaLogin.value;
+
+      if (modoLider && senhaDigitada === SENHA_LIDER) {
+        liberarAcesso();
+      } else if (modoAdmin && senhaDigitada === SENHA_ADMIN) {
+        liberarAcesso();
+      } else {
+        erroLogin.innerText = "Senha incorreta!";
+      }
+    });
+
+    senhaLogin.addEventListener("keydown", (evento) => {
+      if (evento.key === "Enter") {
+        btnEntrarLogin.click();
+      }
+    });
+  } else {
+    telaLogin.style.display = "none";
+    liberarAcesso();
+  }
 }
 
 async function carregarCifrasFixas() {
-  const resposta = await fetch("/cifras.json");
-  cifrasFixas = await resposta.json();
-  juntarCifras();
+  try {
+    const resposta = await fetch("/cifras.json");
+    cifrasFixas = await resposta.json();
+    juntarCifras();
+  } catch (erro) {
+    console.error("Erro ao carregar cifras.json:", erro);
+    cifrasFixas = [];
+    juntarCifras();
+  }
 }
 
 function carregarCifrasAdmin() {
@@ -249,9 +223,6 @@ function mostrarCifrasAdmin() {
   });
 }
 
-carregarCifrasFixas();
-carregarCifrasAdmin();
-
 if (buscaCifra) {
   buscaCifra.addEventListener("input", () => {
     const texto = buscaCifra.value.toLowerCase();
@@ -305,13 +276,15 @@ async function renderizarPDF(arquivo, pagina) {
 
     infoPagina.innerText = `Página ${pagina} de ${pdfDoc.numPages}`;
   } catch (erro) {
-    console.error(erro);
+    console.error("Erro ao carregar PDF:", erro);
     infoPagina.innerText = "Erro ao carregar a cifra.";
   }
 }
 
 if (btnAbrir) {
   btnAbrir.addEventListener("click", async () => {
+    if (!pdfSelect.value) return;
+
     await set(ref(db, "sala"), {
       pdf: pdfSelect.value,
       pagina: 1
@@ -354,3 +327,7 @@ onValue(ref(db, "sala"), async (snapshot) => {
   ultimoEstado = dados;
   await renderizarPDF(dados.pdf, dados.pagina);
 });
+
+iniciarLogin();
+carregarCifrasFixas();
+carregarCifrasAdmin();
