@@ -175,3 +175,67 @@ canvas {
   margin-top: 10px;
   font-weight: bold;
 }
+
+/* TELA DE LOGIN */
+
+.login-overlay {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background: linear-gradient(135deg, #111, #1f1f1f);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  background: #222;
+  padding: 30px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+}
+
+.login-card h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+}
+
+.login-card h2 {
+  margin: 0 0 20px;
+  color: #ccc;
+  font-size: 20px;
+}
+
+.login-card input {
+  width: 90%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+
+.login-card button {
+  width: 95%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #2c7be5;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.login-card button:hover {
+  background: #1a68d1;
+}
+
+#erroLogin {
+  color: #ff7676;
+  font-weight: bold;
+  margin-top: 12px;
+}
