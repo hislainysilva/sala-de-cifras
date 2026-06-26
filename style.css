@@ -332,3 +332,29 @@ body:not(.modo-musico) #telaBoasVindas {
 body:not(.modo-musico) #pdfCanvas {
   display: block;
 }
+#tituloMusica{
+    display:none;
+
+    background:#111;
+    color:#d4af37;
+
+    font-size:24px;
+    font-weight:bold;
+
+    text-align:center;
+
+    padding:15px;
+
+    border-bottom:2px solid #d4af37;
+
+    letter-spacing:1px;
+}
+
+@media(max-width:768px){
+
+    #tituloMusica{
+        font-size:18px;
+        padding:12px;
+    }
+
+}
