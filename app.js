@@ -54,6 +54,8 @@ const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
 const mensagemAdmin = document.getElementById("mensagemAdmin");
 
 const infoPagina = document.getElementById("infoPagina");
+const tituloMusica =
+    document.getElementById("tituloMusica"); 
 const telaBoasVindas = document.getElementById("telaBoasVindas");
 
 const canvas = document.getElementById("pdfCanvas");
@@ -195,8 +197,9 @@ function atualizarLista(lista) {
 
   lista.forEach(cifra => {
     const option = document.createElement("option");
-    option.value = cifra.arquivo;
-    option.textContent = cifra.nome;
+   option.value = cifra.arquivo;
+option.textContent = cifra.nome;
+option.dataset.nome = cifra.nome;
     pdfSelect.appendChild(option);
   });
 
@@ -285,9 +288,21 @@ if (btnAdicionarCifra) {
 }
 
 async function renderizarPDF(arquivo, pagina) {
-  try {
+    try {
     pdfDoc = await pdfjsLib.getDocument(`/pdfs/${arquivo}`).promise;
+const cifraAtual =
+    todasCifras.find(
+        c => c.arquivo === arquivo
+    );
 
+if(cifraAtual && tituloMusica){
+
+    tituloMusica.innerText =
+        cifraAtual.nome;
+
+    tituloMusica.style.display =
+        "block";
+}
     esconderBoasVindas();
 
     if (pagina < 1) pagina = 1;
