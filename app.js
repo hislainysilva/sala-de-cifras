@@ -72,38 +72,49 @@ function configurarInterface() {
   painelAdmin.style.display = "none";
   painelLider.style.display = "none";
 
- function configurarInterface() {
+function configurarInterface() {
+  document.body.classList.remove("modo-lider", "modo-admin", "modo-musico");
 
-  // Esconde todos os painéis inicialmente
   painelAdmin.style.display = "none";
   painelLider.style.display = "none";
 
-  // A tela de boas-vindas só deve aparecer no modo músico
   if (telaBoasVindas) {
     telaBoasVindas.style.display = "none";
   }
 
-  // O canvas deve permanecer visível no líder e admin
   if (canvas) {
     canvas.style.display = "block";
   }
 
   if (modoLider) {
-
     document.body.classList.add("modo-lider");
-
     tituloPainel.innerText = "Painel do Líder";
-
     painelLider.style.display = "block";
+    painelAdmin.style.display = "none";
+  }
 
-    // Líder nunca vê a tela de boas-vindas
+  else if (modoAdmin) {
+    document.body.classList.add("modo-admin");
+    tituloPainel.innerText = "Administração";
+    painelAdmin.style.display = "block";
+    painelLider.style.display = "none";
+  }
+
+  else {
+    document.body.classList.add("modo-musico");
+    tituloPainel.innerText = "Painel do Músico";
+    painelAdmin.style.display = "none";
+    painelLider.style.display = "none";
+
     if (telaBoasVindas) {
-      telaBoasVindas.style.display = "none";
+      telaBoasVindas.style.display = "flex";
     }
 
     if (canvas) {
-      canvas.style.display = "block";
+      canvas.style.display = "none";
     }
+  }
+}
 
   } else if (modoAdmin) {
 
