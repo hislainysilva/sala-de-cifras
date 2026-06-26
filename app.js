@@ -359,7 +359,16 @@ onValue(ref(db, "sala"), async (snapshot) => {
   if (!dados) return;
 
   ultimoEstado = dados;
-  await renderizarPDF(dados.pdf, dados.pagina);
+
+  if (modoMusico) {
+    mostrarBoasVindas();
+
+    setTimeout(async () => {
+      await renderizarPDF(dados.pdf, dados.pagina);
+    }, 5000);
+  } else {
+    await renderizarPDF(dados.pdf, dados.pagina);
+  }
 });
 
 iniciarLogin();
