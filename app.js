@@ -47,6 +47,63 @@ const modoAdmin = modo === "admin";
 const SENHA_LIDER = "louvor2025";
 const SENHA_ADMIN = "admin2025";
 
+const telaLogin = document.getElementById("telaLogin");
+const tituloLogin = document.getElementById("tituloLogin");
+const senhaLogin = document.getElementById("senhaLogin");
+const btnEntrarLogin = document.getElementById("btnEntrarLogin");
+const erroLogin = document.getElementById("erroLogin");
+
+function liberarAcesso() {
+  telaLogin.style.display = "none";
+
+  if (modoLider) {
+    document.body.classList.add("modo-lider");
+    tituloPainel.innerText = "Painel do Líder";
+    painelLider.style.display = "block";
+    painelAdmin.style.display = "none";
+  } else if (modoAdmin) {
+    document.body.classList.add("modo-admin");
+    tituloPainel.innerText = "Administração";
+    painelLider.style.display = "none";
+    painelAdmin.style.display = "block";
+  } else {
+    document.body.classList.add("modo-musico");
+    tituloPainel.innerText = "Painel do Músico";
+    painelLider.style.display = "none";
+    painelAdmin.style.display = "none";
+  }
+}
+
+if (modoLider || modoAdmin) {
+  telaLogin.style.display = "flex";
+
+  tituloLogin.innerText = modoLider
+    ? "Acesso do Líder"
+    : "Acesso do Administrador";
+
+  btnEntrarLogin.addEventListener("click", () => {
+    const senhaDigitada = senhaLogin.value;
+
+    if (modoLider && senhaDigitada === SENHA_LIDER) {
+      liberarAcesso();
+    } else if (modoAdmin && senhaDigitada === SENHA_ADMIN) {
+      liberarAcesso();
+    } else {
+      erroLogin.innerText = "Senha incorreta!";
+    }
+  });
+
+  senhaLogin.addEventListener("keydown", (evento) => {
+    if (evento.key === "Enter") {
+      btnEntrarLogin.click();
+    }
+  });
+
+} else {
+  telaLogin.style.display = "none";
+  liberarAcesso();
+}
+
 let pdfDoc = null;
 let ultimoEstado = null;
 let cifrasFixas = [];
