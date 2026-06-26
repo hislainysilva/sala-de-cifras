@@ -126,7 +126,7 @@ async function mostrarTransicao(nome) {
   );
 
   await new Promise(resolve =>
-    setTimeout(resolve, 400)
+    setTimeout(resolve, 100)
   );
 }
 function configurarInterface() {
@@ -441,11 +441,21 @@ onValue(ref(db, "sala"), async (snapshot) => {
     );
 
     if (cifraAtual) {
-      await mostrarTransicao(cifraAtual.nome);
-    }
-  }
+    await mostrarTransicao(cifraAtual.nome);
+}
 
-  await renderizarPDF(dados.pdf, dados.pagina);
+if (canvas) {
+    canvas.style.visibility = "hidden";
+}
+
+await renderizarPDF(
+    dados.pdf,
+    dados.pagina
+);
+
+if (canvas) {
+    canvas.style.visibility = "visible";
+};
 });
 
 iniciarLogin();
