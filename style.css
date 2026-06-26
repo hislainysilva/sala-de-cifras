@@ -239,3 +239,86 @@ canvas {
   font-weight: bold;
   margin-top: 12px;
 }
+/* ===================================
+   TELA DE BOAS-VINDAS
+=================================== */
+
+#telaBoasVindas {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #111;
+
+    z-index: 5;
+}
+
+.boas-vindas-card {
+    text-align: center;
+
+    padding: 40px;
+
+    max-width: 500px;
+}
+
+.boas-vindas-card .logo {
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.boas-vindas-card h1 {
+    color: #ffffff;
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.boas-vindas-card h2 {
+    color: #d4af37;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+.boas-vindas-card .versiculo {
+    color: #e0e0e0;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.boas-vindas-card .referencia {
+    color: #d4af37;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.boas-vindas-card span {
+    color: #888;
+    font-size: 16px;
+}
+
+#pdfCanvas {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .boas-vindas-card h1 {
+        font-size: 32px;
+    }
+
+    .boas-vindas-card h2 {
+        font-size: 24px;
+    }
+
+    .boas-vindas-card .versiculo {
+        font-size: 18px;
+    }
+
+    .boas-vindas-card .logo {
+        font-size: 60px;
+    }
+}
