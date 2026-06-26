@@ -112,7 +112,7 @@ let todasCifras = [];
 
 if (modoLider) {
 
-    const senha = prompt("Digite a senha do líder:");
+  
 
     if (senha !== SENHA_LIDER) {
         alert("Senha incorreta!");
@@ -127,7 +127,7 @@ if (modoLider) {
 
 } else if (modoAdmin) {
 
-    const senha = prompt("Digite a senha do administrador:");
+  
 
     if (senha !== SENHA_ADMIN) {
         alert("Senha incorreta!");
