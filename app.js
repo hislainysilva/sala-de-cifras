@@ -99,7 +99,7 @@ function esconderBoasVindas() {
     canvas.style.display = "block";
   }
 }
-async function mostrarTransicao(nome) {
+function abrirTransicao(nome) {
 
   if (!modoMusico) return;
 
@@ -107,8 +107,37 @@ async function mostrarTransicao(nome) {
     return;
 
   if (canvas) {
-    canvas.style.display = "none";
+    canvas.style.visibility = "hidden";
   }
+
+  nomeTransicao.innerText =
+    nome || "Próximo Louvor";
+
+  telaTransicao.classList.add(
+    "ativa"
+  );
+}
+
+async function fecharTransicao() {
+
+  if (!modoMusico) return;
+
+  if (!telaTransicao)
+    return;
+
+  telaTransicao.classList.remove(
+    "ativa"
+  );
+
+  await new Promise(resolve =>
+    setTimeout(resolve, 300)
+  );
+
+  if (canvas) {
+    canvas.style.visibility =
+      "visible";
+  }
+}
 
   nomeTransicao.innerText =
     nome || "Próximo Louvor";
@@ -440,22 +469,18 @@ onValue(ref(db, "sala"), async (snapshot) => {
       cifra => cifra.arquivo === dados.pdf
     );
 
-    if (cifraAtual) {
-    await mostrarTransicao(cifraAtual.nome);
-}
+    abrirTransicao(
+      cifraAtual ? cifraAtual.nome : "Próximo Louvor"
+    );
 
-if (canvas) {
-    canvas.style.visibility = "hidden";
-}
+    await renderizarPDF(dados.pdf, dados.pagina);
 
-await renderizarPDF(
-    dados.pdf,
-    dados.pagina
-);
+    await fecharTransicao();
 
-if (canvas) {
-    canvas.style.visibility = "visible";
-};
+    return;
+  }
+
+  await renderizarPDF(dados.pdf, dados.pagina);
 });
 
 iniciarLogin();
