@@ -106,16 +106,17 @@ function abrirTransicao(nome) {
   if (!telaTransicao || !nomeTransicao)
     return;
 
+  // esconde a cifra antiga
   if (canvas) {
     canvas.style.visibility = "hidden";
   }
 
+  // atualiza o nome da próxima música
   nomeTransicao.innerText =
     nome || "Próximo Louvor";
 
-  telaTransicao.classList.add(
-    "ativa"
-  );
+  // exibe a tela de transição
+  telaTransicao.classList.add("ativa");
 }
 
 async function fecharTransicao() {
@@ -125,38 +126,23 @@ async function fecharTransicao() {
   if (!telaTransicao)
     return;
 
-  telaTransicao.classList.remove(
-    "ativa"
-  );
-
-  await new Promise(resolve =>
-    setTimeout(resolve, 300)
-  );
-
-  if (canvas) {
-    canvas.style.visibility =
-      "visible";
-  }
-}
-
-  nomeTransicao.innerText =
-    nome || "Próximo Louvor";
-
-  telaTransicao.classList.add(
-    "ativa"
-  );
-
+  // mantém a tela visível por 1,2s
   await new Promise(resolve =>
     setTimeout(resolve, 1200)
   );
 
-  telaTransicao.classList.remove(
-    "ativa"
+  // inicia o fade-out
+  telaTransicao.classList.remove("ativa");
+
+  // aguarda o fade terminar
+  await new Promise(resolve =>
+    setTimeout(resolve, 300)
   );
 
-  await new Promise(resolve =>
-    setTimeout(resolve, 100)
-  );
+  // mostra a nova cifra já carregada
+  if (canvas) {
+    canvas.style.visibility = "visible";
+  }
 }
 function configurarInterface() {
   document.body.classList.remove("modo-lider", "modo-admin", "modo-musico");
