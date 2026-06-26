@@ -441,3 +441,41 @@ body:not(.modo-musico) #pdfCanvas {
 #statusConexao.offline {
     color: #ff4d4d;
 }
+
+#statusConexao{
+
+    position:fixed;
+
+    bottom:20px;
+    right:20px;
+
+    background:rgba(20,20,20,.95);
+
+    padding:12px 18px;
+
+    border-radius:20px;
+
+    z-index:10000;
+
+    text-align:center;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,.4);
+}
+
+#textoConexao{
+    color:#00ff88;
+    font-size:14px;
+    font-weight:bold;
+}
+
+#statusConexao.offline #textoConexao{
+    color:#ff4d4d;
+}
+
+#relogio{
+    margin-top:5px;
+    color:white;
+    font-size:24px;
+    font-weight:bold;
+}
