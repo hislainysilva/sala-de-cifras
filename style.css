@@ -363,7 +363,7 @@ body:not(.modo-musico) #pdfCanvas {
     position:fixed;
     inset:0;
 
-    display:none;
+    display:flex;
 
     justify-content:center;
     align-items:center;
@@ -371,6 +371,18 @@ body:not(.modo-musico) #pdfCanvas {
     background:#111;
 
     z-index:9999;
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:
+        opacity .4s ease,
+        visibility .4s ease;
+}
+
+#telaTransicao.ativa{
+    opacity:1;
+    visibility:visible;
 }
 
 .transicao-card{
