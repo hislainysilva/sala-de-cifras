@@ -322,3 +322,13 @@ canvas {
         font-size: 60px;
     }
 }
+
+/* Corrige boas-vindas: só aparece no modo músico */
+
+body:not(.modo-musico) #telaBoasVindas {
+  display: none !important;
+}
+
+body:not(.modo-musico) #pdfCanvas {
+  display: block;
+}
