@@ -358,3 +358,43 @@ body:not(.modo-musico) #pdfCanvas {
     }
 
 }
+
+#telaTransicao{
+    position:fixed;
+    inset:0;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    background:#111;
+
+    z-index:9999;
+}
+
+.transicao-card{
+    text-align:center;
+}
+
+.icone-transicao{
+    font-size:70px;
+    margin-bottom:20px;
+}
+
+.transicao-card h2{
+    color:#d4af37;
+    font-size:26px;
+    margin-bottom:20px;
+}
+
+.transicao-card h1{
+    color:white;
+    font-size:34px;
+    margin-bottom:20px;
+}
+
+.transicao-card p{
+    color:#888;
+    font-size:18px;
+}
