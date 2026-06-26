@@ -178,12 +178,17 @@ function liberarAcesso() {
 }
 function atualizarStatusConexao() {
 
-    if (!statusConexao)
+    const textoConexao =
+        document.getElementById(
+            "textoConexao"
+        );
+
+    if (!textoConexao)
         return;
 
     if (navigator.onLine) {
 
-        statusConexao.innerText =
+        textoConexao.innerText =
             "🟢 Conectado";
 
         statusConexao.classList.remove(
@@ -192,7 +197,7 @@ function atualizarStatusConexao() {
 
     } else {
 
-        statusConexao.innerText =
+        textoConexao.innerText =
             "🔴 Reconectando...";
 
         statusConexao.classList.add(
