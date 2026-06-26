@@ -103,18 +103,27 @@ async function mostrarTransicao(nome) {
 
   if (!modoMusico) return;
 
-  if (!telaTransicao || !nomeTransicao) return;
-
-  telaTransicao.style.display = "flex";
+  if (!telaTransicao || !nomeTransicao)
+    return;
 
   nomeTransicao.innerText =
-      nome || "Próximo Louvor";
+    nome || "Próximo Louvor";
 
-  await new Promise(resolve =>
-      setTimeout(resolve, 1000)
+  telaTransicao.classList.add(
+    "ativa"
   );
 
-  telaTransicao.style.display = "none";
+  await new Promise(resolve =>
+    setTimeout(resolve, 1200)
+  );
+
+  telaTransicao.classList.remove(
+    "ativa"
+  );
+
+  await new Promise(resolve =>
+    setTimeout(resolve, 400)
+  );
 }
 function configurarInterface() {
   document.body.classList.remove("modo-lider", "modo-admin", "modo-musico");
