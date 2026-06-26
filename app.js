@@ -368,6 +368,8 @@ if (btnProxima) {
   });
 }
 
+let primeiraAberturaMusico = true;
+
 onValue(ref(db, "sala"), async (snapshot) => {
   const dados = snapshot.val();
 
@@ -375,15 +377,19 @@ onValue(ref(db, "sala"), async (snapshot) => {
 
   ultimoEstado = dados;
 
-  if (modoMusico) {
+  if (modoMusico && primeiraAberturaMusico) {
+    primeiraAberturaMusico = false;
+
     mostrarBoasVindas();
 
     setTimeout(async () => {
       await renderizarPDF(dados.pdf, dados.pagina);
-    }, 5000);
-  } else {
-    await renderizarPDF(dados.pdf, dados.pagina);
+    }, 3000);
+
+    return;
   }
+
+  await renderizarPDF(dados.pdf, dados.pagina);
 });
 
 iniciarLogin();
