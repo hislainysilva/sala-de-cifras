@@ -375,6 +375,10 @@ onValue(ref(db, "sala"), async (snapshot) => {
 
   if (!dados) return;
 
+  const mudouCifra =
+    ultimoEstado &&
+    ultimoEstado.pdf !== dados.pdf;
+
   ultimoEstado = dados;
 
   if (modoMusico && primeiraAberturaMusico) {
@@ -387,6 +391,16 @@ onValue(ref(db, "sala"), async (snapshot) => {
     }, 3000);
 
     return;
+  }
+
+  if (modoMusico && mudouCifra) {
+    const cifraAtual = todasCifras.find(
+      cifra => cifra.arquivo === dados.pdf
+    );
+
+    if (cifraAtual) {
+      await mostrarTransicao(cifraAtual.nome);
+    }
   }
 
   await renderizarPDF(dados.pdf, dados.pagina);
