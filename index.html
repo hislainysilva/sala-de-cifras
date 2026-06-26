@@ -4,67 +4,165 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Louvor Sync</title>
+
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#111111">
+
+  <meta name="theme-color" content="#111111">
 </head>
+
 <body>
+
+<!-- TELA DE LOGIN -->
 <div id="telaLogin" class="login-overlay">
   <div class="login-card">
+
     <h1>Louvor Sync 🎵</h1>
-    <h2 id="tituloLogin">Acesso Restrito</h2>
 
-    <input type="password" id="senhaLogin" placeholder="Digite a senha">
+    <h2 id="tituloLogin">
+      Acesso Restrito
+    </h2>
 
-    <button id="btnEntrarLogin">Entrar</button>
+    <input
+      type="password"
+      id="senhaLogin"
+      placeholder="Digite a senha"
+    >
+
+    <button id="btnEntrarLogin">
+      Entrar
+    </button>
 
     <p id="erroLogin"></p>
+
   </div>
 </div>
+
 <header>
   <h1>Louvor Sync 🎵</h1>
   <p>Cifras sincronizadas em tempo real</p>
 </header>
 
 <main>
+
+  <!-- PAINEL -->
   <section class="painel">
+
+    <!-- ADMIN -->
     <div id="painelAdmin">
-  <h2>Adicionar Nova Cifra</h2>
 
-  <input type="text" id="nomeNovaCifra" placeholder="Nome da música">
-  <input type="text" id="arquivoNovaCifra" placeholder="Nome exato do PDF">
+      <h2>Adicionar Nova Cifra</h2>
 
-  <button id="btnAdicionarCifra">Adicionar cifra</button>
+      <input
+        type="text"
+        id="nomeNovaCifra"
+        placeholder="Nome da música"
+      >
 
-  <p id="mensagemAdmin"></p>
-</div>
-  <h2 id="tituloPainel">Painel</h2>
+      <input
+        type="text"
+        id="arquivoNovaCifra"
+        placeholder="Nome exato do PDF"
+      >
 
-  <div id="painelLider">
-    <input type="text" id="buscaCifra" placeholder="Buscar cifra...">
-    <select id="pdfSelect"></select>
+      <button id="btnAdicionarCifra">
+        Adicionar cifra
+      </button>
 
-    <div class="botoes">
-      <button id="btnAbrir">Abrir cifra</button>
-      <button id="btnAnterior">Página anterior</button>
-      <button id="btnProxima">Próxima página</button>
+      <p id="mensagemAdmin"></p>
+
     </div>
-  </div>
 
-  <p id="infoPagina">Página 1</p>
-</section>
+    <h2 id="tituloPainel">Painel</h2>
 
-  <section class="visualizador">
-    <canvas id="pdfCanvas"></canvas>
+    <!-- LÍDER -->
+    <div id="painelLider">
+
+      <input
+        type="text"
+        id="buscaCifra"
+        placeholder="Buscar cifra..."
+      >
+
+      <select id="pdfSelect"></select>
+
+      <div class="botoes">
+
+        <button id="btnAbrir">
+          Abrir cifra
+        </button>
+
+        <button id="btnAnterior">
+          Página anterior
+        </button>
+
+        <button id="btnProxima">
+          Próxima página
+        </button>
+
+      </div>
+
+    </div>
+
+    <p id="infoPagina">
+      Aguardando...
+    </p>
+
   </section>
+
+  <!-- VISUALIZADOR -->
+  <section class="visualizador">
+
+    <!-- TELA DE BOAS-VINDAS -->
+    <div id="telaBoasVindas">
+
+      <div class="boas-vindas-card">
+
+        <div class="logo">
+          🎵
+        </div>
+
+        <h1>
+          Louvor Sync
+        </h1>
+
+        <h2>
+          Bem-vindo!
+        </h2>
+
+        <p class="versiculo">
+          "Que tudo quanto tem fôlego
+          louve ao Senhor."
+        </p>
+
+        <p class="referencia">
+          Salmos 150:6
+        </p>
+
+        <span>
+          Aguardando o início do louvor...
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- PDF -->
+    <canvas id="pdfCanvas"></canvas>
+
+  </section>
+
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
 <script type="module" src="app.js"></script>
+
 <script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js");
-  }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js");
+}
 </script>
+
 </body>
 </html>
