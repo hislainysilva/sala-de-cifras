@@ -26,6 +26,7 @@ const modo = parametros.get("modo") || "musico";
 
 const modoLider = modo === "lider";
 const modoAdmin = modo === "admin";
+const modoMusico = !modoLider && !modoAdmin;
 
 const SENHA_LIDER = "louvor2025";
 const SENHA_ADMIN = "admin2025";
@@ -53,14 +54,10 @@ const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
 const mensagemAdmin = document.getElementById("mensagemAdmin");
 
 const infoPagina = document.getElementById("infoPagina");
-const telaBoasVindas =
-  document.getElementById("telaBoasVindas");
+const telaBoasVindas = document.getElementById("telaBoasVindas");
 
-const canvas =
-  document.getElementById("pdfCanvas");
-
-const ctx =
-  canvas.getContext("2d");
+const canvas = document.getElementById("pdfCanvas");
+const ctx = canvas.getContext("2d");
 
 let pdfDoc = null;
 let ultimoEstado = null;
@@ -68,16 +65,17 @@ let cifrasFixas = [];
 let cifrasAdmin = [];
 let todasCifras = [];
 
-function configurarInterface() {
-  painelAdmin.style.display = "none";
-  painelLider.style.display = "none";
+function mostrarBoasVindas() {
+  if (modoMusico && telaBoasVindas) {
+    telaBoasVindas.style.display = "flex";
+  }
 
-function configurarInterface() {
-  document.body.classList.remove("modo-lider", "modo-admin", "modo-musico");
+  if (canvas) {
+    canvas.style.display = "none";
+  }
+}
 
-  painelAdmin.style.display = "none";
-  painelLider.style.display = "none";
-
+function esconderBoasVindas() {
   if (telaBoasVindas) {
     telaBoasVindas.style.display = "none";
   }
@@ -85,69 +83,28 @@ function configurarInterface() {
   if (canvas) {
     canvas.style.display = "block";
   }
+}
+
+function configurarInterface() {
+  document.body.classList.remove("modo-lider", "modo-admin", "modo-musico");
+
+  painelAdmin.style.display = "none";
+  painelLider.style.display = "none";
 
   if (modoLider) {
     document.body.classList.add("modo-lider");
     tituloPainel.innerText = "Painel do Líder";
     painelLider.style.display = "block";
-    painelAdmin.style.display = "none";
-  }
-
-  else if (modoAdmin) {
-    document.body.classList.add("modo-admin");
-    tituloPainel.innerText = "Administração";
-    painelAdmin.style.display = "block";
-    painelLider.style.display = "none";
-  }
-
-  else {
-    document.body.classList.add("modo-musico");
-    tituloPainel.innerText = "Painel do Músico";
-    painelAdmin.style.display = "none";
-    painelLider.style.display = "none";
-
-    if (telaBoasVindas) {
-      telaBoasVindas.style.display = "flex";
-    }
-
-    if (canvas) {
-      canvas.style.display = "none";
-    }
-  }
-}
-
+    esconderBoasVindas();
   } else if (modoAdmin) {
-
     document.body.classList.add("modo-admin");
-
     tituloPainel.innerText = "Administração";
-
     painelAdmin.style.display = "block";
-
-    // Admin nunca vê a tela de boas-vindas
-    if (telaBoasVindas) {
-      telaBoasVindas.style.display = "none";
-    }
-
-    if (canvas) {
-      canvas.style.display = "block";
-    }
-
+    esconderBoasVindas();
   } else {
-
     document.body.classList.add("modo-musico");
-
     tituloPainel.innerText = "Painel do Músico";
-
-    // No músico a tela de boas-vindas aparece
-    // até que a primeira cifra seja carregada
-    if (telaBoasVindas) {
-      telaBoasVindas.style.display = "flex";
-    }
-
-    if (canvas) {
-      canvas.style.display = "none";
-    }
+    mostrarBoasVindas();
   }
 }
 
@@ -187,62 +144,15 @@ function iniciarLogin() {
   }
 }
 
-async function renderizarPDF(arquivo, pagina) {
+async function carregarCifrasFixas() {
   try {
-
-    // Esconde a tela de boas-vindas
-    if (telaBoasVindas) {
-      telaBoasVindas.style.display = "none";
-    }
-
-    // Mostra o PDF
-    canvas.style.display = "block";
-
-    pdfDoc = await pdfjsLib
-      .getDocument(`/pdfs/${arquivo}`)
-      .promise;
-
-    if (pagina < 1) {
-      pagina = 1;
-    }
-
-    if (pagina > pdfDoc.numPages) {
-      pagina = pdfDoc.numPages;
-    }
-
-    const page = await pdfDoc.getPage(pagina);
-
-    const viewport = page.getViewport({
-      scale: 1.5
-    });
-
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-
-    await page.render({
-      canvasContext: ctx,
-      viewport
-    }).promise;
-
-    infoPagina.innerText =
-      `Página ${pagina} de ${pdfDoc.numPages}`;
-
+    const resposta = await fetch("/cifras.json");
+    cifrasFixas = await resposta.json();
+    juntarCifras();
   } catch (erro) {
-
-    console.error(
-      "Erro ao carregar PDF:",
-      erro
-    );
-
-    infoPagina.innerText =
-      "Erro ao carregar a cifra.";
-
-    // Se houver erro, volta para a tela inicial
-    if (telaBoasVindas) {
-      telaBoasVindas.style.display = "flex";
-    }
-
-    canvas.style.display = "none";
+    console.error("Erro ao carregar cifras.json:", erro);
+    cifrasFixas = [];
+    juntarCifras();
   }
 }
 
@@ -378,6 +288,8 @@ async function renderizarPDF(arquivo, pagina) {
   try {
     pdfDoc = await pdfjsLib.getDocument(`/pdfs/${arquivo}`).promise;
 
+    esconderBoasVindas();
+
     if (pagina < 1) pagina = 1;
     if (pagina > pdfDoc.numPages) pagina = pdfDoc.numPages;
 
@@ -396,6 +308,10 @@ async function renderizarPDF(arquivo, pagina) {
   } catch (erro) {
     console.error("Erro ao carregar PDF:", erro);
     infoPagina.innerText = "Erro ao carregar a cifra.";
+
+    if (modoMusico) {
+      mostrarBoasVindas();
+    }
   }
 }
 
