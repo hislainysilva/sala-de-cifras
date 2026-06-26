@@ -59,6 +59,8 @@ const statusConexao =
     document.getElementById(
         "statusConexao"
     );
+const relogio =
+    document.getElementById("relogio");
 const tituloMusica =
     document.getElementById("tituloMusica");
 
@@ -198,6 +200,33 @@ function atualizarStatusConexao() {
         );
     }
 }
+ function atualizarRelogio() {
+
+    if (!relogio)
+        return;
+
+    const agora = new Date();
+
+    const horas =
+        String(
+            agora.getHours()
+        ).padStart(2, "0");
+
+    const minutos =
+        String(
+            agora.getMinutes()
+        ).padStart(2, "0");
+
+    relogio.innerText =
+        `${horas}:${minutos}`;
+}
+
+atualizarRelogio();
+
+setInterval(
+    atualizarRelogio,
+    1000
+);
 
 window.addEventListener(
     "online",
