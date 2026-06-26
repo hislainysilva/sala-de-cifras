@@ -106,6 +106,10 @@ async function mostrarTransicao(nome) {
   if (!telaTransicao || !nomeTransicao)
     return;
 
+  if (canvas) {
+    canvas.style.display = "none";
+  }
+
   nomeTransicao.innerText =
     nome || "Próximo Louvor";
 
