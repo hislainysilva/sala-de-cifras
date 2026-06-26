@@ -55,7 +55,10 @@ const mensagemAdmin = document.getElementById("mensagemAdmin");
 
 const infoPagina =
     document.getElementById("infoPagina");
-
+const statusConexao =
+    document.getElementById(
+        "statusConexao"
+    );
 const tituloMusica =
     document.getElementById("tituloMusica");
 
@@ -171,7 +174,42 @@ function liberarAcesso() {
   telaLogin.style.display = "none";
   configurarInterface();
 }
+function atualizarStatusConexao() {
 
+    if (!statusConexao)
+        return;
+
+    if (navigator.onLine) {
+
+        statusConexao.innerText =
+            "🟢 Conectado";
+
+        statusConexao.classList.remove(
+            "offline"
+        );
+
+    } else {
+
+        statusConexao.innerText =
+            "🔴 Reconectando...";
+
+        statusConexao.classList.add(
+            "offline"
+        );
+    }
+}
+
+window.addEventListener(
+    "online",
+    atualizarStatusConexao
+);
+
+window.addEventListener(
+    "offline",
+    atualizarStatusConexao
+);
+
+atualizarStatusConexao();
 function iniciarLogin() {
   if (modoLider || modoAdmin) {
     telaLogin.style.display = "flex";
