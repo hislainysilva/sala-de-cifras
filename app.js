@@ -53,13 +53,26 @@ const arquivoNovaCifra = document.getElementById("arquivoNovaCifra");
 const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
 const mensagemAdmin = document.getElementById("mensagemAdmin");
 
-const infoPagina = document.getElementById("infoPagina");
-const tituloMusica =
-    document.getElementById("tituloMusica"); 
-const telaBoasVindas = document.getElementById("telaBoasVindas");
+const infoPagina =
+    document.getElementById("infoPagina");
 
-const canvas = document.getElementById("pdfCanvas");
-const ctx = canvas.getContext("2d");
+const tituloMusica =
+    document.getElementById("tituloMusica");
+
+const telaBoasVindas =
+    document.getElementById("telaBoasVindas");
+
+const telaTransicao =
+    document.getElementById("telaTransicao");
+
+const nomeTransicao =
+    document.getElementById("nomeTransicao");
+
+const canvas =
+    document.getElementById("pdfCanvas");
+
+const ctx =
+    canvas.getContext("2d");
 
 let pdfDoc = null;
 let ultimoEstado = null;
@@ -86,7 +99,23 @@ function esconderBoasVindas() {
     canvas.style.display = "block";
   }
 }
+async function mostrarTransicao(nome) {
 
+  if (!modoMusico) return;
+
+  if (!telaTransicao || !nomeTransicao) return;
+
+  telaTransicao.style.display = "flex";
+
+  nomeTransicao.innerText =
+      nome || "Próximo Louvor";
+
+  await new Promise(resolve =>
+      setTimeout(resolve, 1000)
+  );
+
+  telaTransicao.style.display = "none";
+}
 function configurarInterface() {
   document.body.classList.remove("modo-lider", "modo-admin", "modo-musico");
 
