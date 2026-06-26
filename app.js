@@ -44,6 +44,8 @@ const parametros = new URLSearchParams(window.location.search);
 const modo = parametros.get("modo");
 const modoLider = modo === "lider";
 const modoAdmin = modo === "admin";
+const SENHA_LIDER = "louvor2025";
+const SENHA_ADMIN = "admin2025";
 
 let pdfDoc = null;
 let ultimoEstado = null;
@@ -52,20 +54,41 @@ let cifrasAdmin = [];
 let todasCifras = [];
 
 if (modoLider) {
-  document.body.classList.add("modo-lider");
-  tituloPainel.innerText = "Painel do Líder";
-  painelLider.style.display = "block";
-  painelAdmin.style.display = "none";
+
+    const senha = prompt("Digite a senha do líder:");
+
+    if (senha !== SENHA_LIDER) {
+        alert("Senha incorreta!");
+        window.location.href = "/";
+        throw new Error("Acesso negado");
+    }
+
+    document.body.classList.add("modo-lider");
+    tituloPainel.innerText = "Painel do Líder";
+    painelLider.style.display = "block";
+    painelAdmin.style.display = "none";
+
 } else if (modoAdmin) {
-  document.body.classList.add("modo-admin");
-  tituloPainel.innerText = "Administração";
-  painelLider.style.display = "none";
-  painelAdmin.style.display = "block";
+
+    const senha = prompt("Digite a senha do administrador:");
+
+    if (senha !== SENHA_ADMIN) {
+        alert("Senha incorreta!");
+        window.location.href = "/";
+        throw new Error("Acesso negado");
+    }
+
+    document.body.classList.add("modo-admin");
+    tituloPainel.innerText = "Administração";
+    painelLider.style.display = "none";
+    painelAdmin.style.display = "block";
+
 } else {
-  document.body.classList.add("modo-musico");
-  tituloPainel.innerText = "Painel do Músico";
-  painelLider.style.display = "none";
-  painelAdmin.style.display = "none";
+
+    document.body.classList.add("modo-musico");
+    tituloPainel.innerText = "Painel do Músico";
+    painelLider.style.display = "none";
+    painelAdmin.style.display = "none";
 }
 
 async function carregarCifrasFixas() {
