@@ -53,8 +53,14 @@ const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
 const mensagemAdmin = document.getElementById("mensagemAdmin");
 
 const infoPagina = document.getElementById("infoPagina");
-const canvas = document.getElementById("pdfCanvas");
-const ctx = canvas.getContext("2d");
+const telaBoasVindas =
+  document.getElementById("telaBoasVindas");
+
+const canvas =
+  document.getElementById("pdfCanvas");
+
+const ctx =
+  canvas.getContext("2d");
 
 let pdfDoc = null;
 let ultimoEstado = null;
@@ -116,15 +122,62 @@ function iniciarLogin() {
   }
 }
 
-async function carregarCifrasFixas() {
+async function renderizarPDF(arquivo, pagina) {
   try {
-    const resposta = await fetch("/cifras.json");
-    cifrasFixas = await resposta.json();
-    juntarCifras();
+
+    // Esconde a tela de boas-vindas
+    if (telaBoasVindas) {
+      telaBoasVindas.style.display = "none";
+    }
+
+    // Mostra o PDF
+    canvas.style.display = "block";
+
+    pdfDoc = await pdfjsLib
+      .getDocument(`/pdfs/${arquivo}`)
+      .promise;
+
+    if (pagina < 1) {
+      pagina = 1;
+    }
+
+    if (pagina > pdfDoc.numPages) {
+      pagina = pdfDoc.numPages;
+    }
+
+    const page = await pdfDoc.getPage(pagina);
+
+    const viewport = page.getViewport({
+      scale: 1.5
+    });
+
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    await page.render({
+      canvasContext: ctx,
+      viewport
+    }).promise;
+
+    infoPagina.innerText =
+      `Página ${pagina} de ${pdfDoc.numPages}`;
+
   } catch (erro) {
-    console.error("Erro ao carregar cifras.json:", erro);
-    cifrasFixas = [];
-    juntarCifras();
+
+    console.error(
+      "Erro ao carregar PDF:",
+      erro
+    );
+
+    infoPagina.innerText =
+      "Erro ao carregar a cifra.";
+
+    // Se houver erro, volta para a tela inicial
+    if (telaBoasVindas) {
+      telaBoasVindas.style.display = "flex";
+    }
+
+    canvas.style.display = "none";
   }
 }
 
