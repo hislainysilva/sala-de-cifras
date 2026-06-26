@@ -410,3 +410,27 @@ body:not(.modo-musico) #pdfCanvas {
     color:#888;
     font-size:18px;
 }
+#statusConexao {
+    position: fixed;
+
+    top: 15px;
+    right: 15px;
+
+    background: #1e1e1e;
+    color: #00ff88;
+
+    padding: 8px 14px;
+
+    border-radius: 20px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    z-index: 10000;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+}
+
+#statusConexao.offline {
+    color: #ff4d4d;
+}
