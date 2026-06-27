@@ -52,7 +52,25 @@ const nomeNovaCifra = document.getElementById("nomeNovaCifra");
 const arquivoNovaCifra = document.getElementById("arquivoNovaCifra");
 const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
 const mensagemAdmin = document.getElementById("mensagemAdmin");
+const modalEditar =
+    document.getElementById(
+        "modalEditar"
+    );
 
+const novoNomeCifra =
+    document.getElementById(
+        "novoNomeCifra"
+    );
+
+const btnSalvarEdicao =
+    document.getElementById(
+        "btnSalvarEdicao"
+    );
+
+const btnCancelarEdicao =
+    document.getElementById(
+        "btnCancelarEdicao"
+    );
 const infoPagina =
     document.getElementById("infoPagina");
 const statusConexao =
@@ -526,6 +544,43 @@ onValue(ref(db, "sala"), async (snapshot) => {
 
   await renderizarPDF(dados.pdf, dados.pagina);
 });
+btnCancelarEdicao?.addEventListener(
+  "click",
+  () => {
+    modalEditar.style.display =
+      "none";
+  }
+);
+
+btnSalvarEdicao?.addEventListener(
+  "click",
+  async () => {
+
+    const nome =
+      novoNomeCifra.value.trim();
+
+    if (!nome) return;
+
+    await set(
+      ref(
+        db,
+        "cifras/" +
+        idCifraEditando
+      ),
+      {
+        nome,
+        arquivo:
+          arquivoCifraEditando
+      }
+    );
+
+    modalEditar.style.display =
+      "none";
+
+    mensagemAdmin.innerText =
+      "Cifra atualizada com sucesso!";
+  }
+);
 
 iniciarLogin();
 carregarCifrasFixas();
