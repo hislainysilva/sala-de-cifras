@@ -84,6 +84,8 @@ let ultimoEstado = null;
 let cifrasFixas = [];
 let cifrasAdmin = [];
 let todasCifras = [];
+let idCifraEditando = null;
+let arquivoCifraEditando = null;
 
 function mostrarBoasVindas() {
   if (modoMusico && telaBoasVindas) {
