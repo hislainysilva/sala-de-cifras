@@ -479,3 +479,52 @@ body:not(.modo-musico) #pdfCanvas {
     font-size:20px;
     font-weight:bold;
 }
+.modal-editar{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.6);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:20000;
+}
+
+.modal-card{
+    background:#1b1b1b;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    width:90%;
+    max-width:400px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.5);
+}
+
+.modal-card h2{
+    margin-bottom:20px;
+    text-align:center;
+}
+
+.modal-card input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    margin-bottom:20px;
+}
+
+.modal-botoes{
+    display:flex;
+    gap:10px;
+}
+
+.modal-botoes button{
+    flex:1;
+}
