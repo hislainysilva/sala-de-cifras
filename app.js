@@ -420,6 +420,28 @@ function mostrarCifrasAdmin() {
   });
 }
 
+if (btnAdicionarCifra) {
+  btnAdicionarCifra.addEventListener("click", async () => {
+    const nome = nomeNovaCifra.value.trim();
+    const arquivo = arquivoNovaCifra.value.trim();
+
+    if (!nome || !arquivo) {
+      mensagemAdmin.innerText = "Preencha o nome da música e o nome do PDF.";
+      return;
+    }
+
+    await push(ref(db, "cifras"), {
+      nome,
+      arquivo
+    });
+
+    nomeNovaCifra.value = "";
+    arquivoNovaCifra.value = "";
+
+    mensagemAdmin.innerText =
+      "Cifra adicionada com sucesso!";
+  });
+}
 async function renderizarPDF(arquivo, pagina) {
     try {
     pdfDoc = await pdfjsLib.getDocument(`/pdfs/${arquivo}`).promise;
