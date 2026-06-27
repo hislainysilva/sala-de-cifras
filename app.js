@@ -362,14 +362,38 @@ function mostrarCifrasAdmin() {
     const item = document.createElement("div");
     item.className = "item-cifra-admin";
 
-    item.innerHTML = `
-      <span>${cifra.nome}</span>
-      <button class="btn-excluir" data-id="${cifra.id}">Excluir</button>
-    `;
+item.innerHTML = `
+  <span>${cifra.nome}</span>
+  <button class="btn-editar" data-id="${cifra.id}">Editar</button>
+  <button class="btn-excluir" data-id="${cifra.id}">Excluir</button>
+`;
 
     listaAdmin.appendChild(item);
   });
+document.querySelectorAll(".btn-editar").forEach(botao => {
+  botao.addEventListener("click", async () => {
+    const id = botao.getAttribute("data-id");
 
+    const cifra = cifrasAdmin.find(c => c.id === id);
+
+    if (!cifra) return;
+
+    const novoNome = prompt(
+      "Digite o novo nome da cifra:",
+      cifra.nome
+    );
+
+    if (!novoNome || !novoNome.trim()) return;
+
+    await set(ref(db, "cifras/" + id), {
+      nome: novoNome.trim(),
+      arquivo: cifra.arquivo
+    });
+
+    mensagemAdmin.innerText =
+      "Nome da cifra atualizado com sucesso!";
+  });
+});
   document.querySelectorAll(".btn-excluir").forEach(botao => {
     botao.addEventListener("click", async () => {
       const id = botao.getAttribute("data-id");
