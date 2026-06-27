@@ -362,38 +362,31 @@ function mostrarCifrasAdmin() {
     const item = document.createElement("div");
     item.className = "item-cifra-admin";
 
-item.innerHTML = `
-  <span>${cifra.nome}</span>
-  <button class="btn-editar" data-id="${cifra.id}">Editar</button>
-  <button class="btn-excluir" data-id="${cifra.id}">Excluir</button>
-`;
+    item.innerHTML = `
+      <span>${cifra.nome}</span>
+      <button class="btn-editar" data-id="${cifra.id}">Editar</button>
+      <button class="btn-excluir" data-id="${cifra.id}">Excluir</button>
+    `;
 
     listaAdmin.appendChild(item);
   });
-document.querySelectorAll(".btn-editar").forEach(botao => {
-  botao.addEventListener("click", async () => {
-    const id = botao.getAttribute("data-id");
 
-    const cifra = cifrasAdmin.find(c => c.id === id);
+  document.querySelectorAll(".btn-editar").forEach(botao => {
+    botao.addEventListener("click", () => {
+      const id = botao.getAttribute("data-id");
+      const cifra = cifrasAdmin.find(c => c.id === id);
 
-    if (!cifra) return;
+      if (!cifra) return;
 
-    const novoNome = prompt(
-      "Digite o novo nome da cifra:",
-      cifra.nome
-    );
+      idCifraEditando = cifra.id;
+      arquivoCifraEditando = cifra.arquivo;
 
-    if (!novoNome || !novoNome.trim()) return;
-
-    await set(ref(db, "cifras/" + id), {
-      nome: novoNome.trim(),
-      arquivo: cifra.arquivo
+      novoNomeCifra.value = cifra.nome;
+      modalEditar.style.display = "flex";
+      novoNomeCifra.focus();
     });
-
-    mensagemAdmin.innerText =
-      "Nome da cifra atualizado com sucesso!";
   });
-});
+
   document.querySelectorAll(".btn-excluir").forEach(botao => {
     botao.addEventListener("click", async () => {
       const id = botao.getAttribute("data-id");
@@ -404,39 +397,6 @@ document.querySelectorAll(".btn-editar").forEach(botao => {
       await remove(ref(db, "cifras/" + id));
       mensagemAdmin.innerText = "Cifra excluída com sucesso!";
     });
-  });
-}
-
-if (buscaCifra) {
-  buscaCifra.addEventListener("input", () => {
-    const texto = buscaCifra.value.toLowerCase();
-
-    const filtradas = todasCifras.filter(cifra =>
-      cifra.nome.toLowerCase().includes(texto)
-    );
-
-    atualizarLista(filtradas);
-  });
-}
-
-if (btnAdicionarCifra) {
-  btnAdicionarCifra.addEventListener("click", async () => {
-    const nome = nomeNovaCifra.value.trim();
-    const arquivo = arquivoNovaCifra.value.trim();
-
-    if (!nome || !arquivo) {
-      mensagemAdmin.innerText = "Preencha o nome da música e o nome do PDF.";
-      return;
-    }
-
-    await push(ref(db, "cifras"), {
-      nome,
-      arquivo
-    });
-
-    nomeNovaCifra.value = "";
-    arquivoNovaCifra.value = "";
-    mensagemAdmin.innerText = "Cifra adicionada com sucesso!";
   });
 }
 
