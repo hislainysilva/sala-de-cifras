@@ -98,6 +98,10 @@ const audioPlayer =
     document.getElementById(
         "audioPlayer"
     );
+const btnVoltarAoVivo =
+    document.getElementById(
+        "btnVoltarAoVivo"
+    );
 const telaTransicao =
     document.getElementById("telaTransicao");
 
@@ -669,6 +673,21 @@ if (listaCifrasMusico) {
             if (!this.value) return;
 
             await abrirCifraIndividual(this.value);
+        }
+    );
+}
+if (btnVoltarAoVivo) {
+    btnVoltarAoVivo.addEventListener(
+        "click",
+        async () => {
+            if (!ultimoEstado || !ultimoEstado.pdf) return;
+
+            await renderizarPDF(
+                ultimoEstado.pdf,
+                ultimoEstado.pagina || 1
+            );
+
+            listaCifrasMusico.value = "";
         }
     );
 }
