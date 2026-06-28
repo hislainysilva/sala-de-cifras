@@ -121,6 +121,41 @@ let cifrasAdmin = [];
 let todasCifras = [];
 let idCifraEditando = null;
 let arquivoCifraEditando = null;
+let wakeLock = null;
+
+async function manterTelaLigada() {
+
+    try {
+
+        if ("wakeLock" in navigator) {
+
+            wakeLock =
+                await navigator.wakeLock.request(
+                    "screen"
+                );
+
+            console.log(
+                "Tela mantida ligada."
+            );
+
+            wakeLock.addEventListener(
+                "release",
+                () => {
+                    console.log(
+                        "Wake Lock liberado."
+                    );
+                }
+            );
+        }
+
+    } catch (erro) {
+
+        console.error(
+            "Erro no Wake Lock:",
+            erro
+        );
+    }
+}
 
 function carregarAudio(arquivoPdf) {
 
@@ -248,9 +283,30 @@ function configurarInterface() {
 }
 
 function liberarAcesso() {
-  telaLogin.style.display = "none";
-  configurarInterface();
+
+    telaLogin.style.display =
+        "none";
+
+    configurarInterface();
+
+    if (modoMusico) {
+        manterTelaLigada();
+    }
 }
+document.addEventListener(
+    "visibilitychange",
+    async () => {
+
+        if (
+            document.visibilityState ===
+            "visible" &&
+            modoMusico
+        ) {
+
+            await manterTelaLigada();
+        }
+    }
+);
 function atualizarStatusConexao() {
 
     const textoConexao =
