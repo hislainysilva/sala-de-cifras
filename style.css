@@ -586,3 +586,22 @@ body:not(.modo-musico) #pdfCanvas {
 .visualizador {
   padding-top: 50px;
 }
+body.modo-musico #statusConexao {
+    position: fixed;
+    top: 8px;
+    right: 8px;
+
+    padding: 5px 8px;
+
+    font-size: 11px;
+
+    width: auto;
+
+    background: rgba(0,0,0,0.8);
+
+    z-index: 9999;
+}
+
+body.modo-musico #relogio {
+    display: none;
+}
