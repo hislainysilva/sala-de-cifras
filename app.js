@@ -495,21 +495,25 @@ if(cifraAtual && tituloMusica){
     tituloMusica.style.display =
         "block";
 }
-      async function abrirCifraIndividual(
-    arquivo
-) {
+     async function abrirCifraIndividual(arquivo) {
 
-    if (!arquivo)
-        return;
+    if (!arquivo) return;
 
-    await renderizarPDF(
-        arquivo,
-        1
-    );
+    primeiraAberturaMusico = false;
 
-    carregarAudio(
-        arquivo
-    );
+    if (telaBoasVindas) {
+        telaBoasVindas.style.display = "none";
+    }
+
+    if (telaTransicao) {
+        telaTransicao.classList.remove("ativa");
+    }
+
+    await renderizarPDF(arquivo, 1);
+
+    if (typeof carregarAudio === "function") {
+        carregarAudio(arquivo);
+    }
 }
     esconderBoasVindas();
 
@@ -658,19 +662,15 @@ btnSalvarEdicao?.addEventListener(
 );
 if (listaCifrasMusico) {
 
-    listaCifrasMusico
-        .addEventListener(
-            "change",
-            async function() {
+    listaCifrasMusico.addEventListener(
+        "change",
+        async function () {
 
-                if (!this.value)
-                    return;
+            if (!this.value) return;
 
-                await abrirCifraIndividual(
-                    this.value
-                );
-            }
-        );
+            await abrirCifraIndividual(this.value);
+        }
+    );
 }
 iniciarLogin();
 carregarCifrasFixas();
