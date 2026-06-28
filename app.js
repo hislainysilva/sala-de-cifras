@@ -495,24 +495,24 @@ if(cifraAtual && tituloMusica){
     tituloMusica.style.display =
         "block";
 }
-     async function abrirCifraIndividual(arquivo) {
+    async function abrirCifraIndividual(arquivo) {
+
+    console.log("Cliquei na cifra:", arquivo);
 
     if (!arquivo) return;
 
     primeiraAberturaMusico = false;
 
-    if (telaBoasVindas) {
-        telaBoasVindas.style.display = "none";
-    }
+    try {
 
-    if (telaTransicao) {
-        telaTransicao.classList.remove("ativa");
-    }
+        await renderizarPDF(arquivo, 1);
 
-    await renderizarPDF(arquivo, 1);
+        console.log("PDF carregado");
 
-    if (typeof carregarAudio === "function") {
-        carregarAudio(arquivo);
+    } catch (erro) {
+
+        console.error("Erro:", erro);
+
     }
 }
     esconderBoasVindas();
