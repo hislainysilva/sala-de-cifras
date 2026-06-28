@@ -605,3 +605,15 @@ body.modo-musico #statusConexao {
 body.modo-musico #relogio {
     display: none;
 }
+
+/* Por padrão, esconde */
+#areaEnsaioIndividual,
+#playerArea {
+    display: none;
+}
+
+/* Exibe apenas para músicos */
+body.modo-musico #areaEnsaioIndividual,
+body.modo-musico #playerArea {
+    display: block;
+}
