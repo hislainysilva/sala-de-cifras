@@ -573,3 +573,16 @@ body:not(.modo-musico) #pdfCanvas {
 .player-area audio {
   width: 100%;
 }
+
+/* Corrige o status de conexão para não cobrir a cifra */
+#statusConexao {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 9999;
+}
+
+/* Dá espaço no topo para a cifra não ficar por baixo */
+.visualizador {
+  padding-top: 50px;
+}
