@@ -254,11 +254,9 @@ function liberarAcesso() {
 function atualizarStatusConexao() {
 
     const textoConexao =
-        document.getElementById(
-            "textoConexao"
-        );
+        document.getElementById("textoConexao");
 
-    if (!textoConexao)
+    if (!textoConexao || !statusConexao)
         return;
 
     if (navigator.onLine) {
