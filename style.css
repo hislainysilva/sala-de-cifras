@@ -629,3 +629,24 @@ body.modo-musico #playerArea {
     font-size: 15px;
     font-weight: bold;
 }
+
+/* Esconde os painéis por padrão */
+#painelAdmin,
+#painelLider {
+    display: none !important;
+}
+
+/* Mostra o painel correto apenas quando o modo for admin */
+body.modo-admin #painelAdmin {
+    display: block !important;
+}
+
+/* Mostra o painel correto apenas quando o modo for líder */
+body.modo-lider #painelLider {
+    display: block !important;
+}
+
+/* No modo músico, esconde a área do painel */
+body.modo-musico .painel {
+    display: none !important;
+}
