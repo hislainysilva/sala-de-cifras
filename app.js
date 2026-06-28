@@ -495,26 +495,6 @@ if(cifraAtual && tituloMusica){
     tituloMusica.style.display =
         "block";
 }
-    async function abrirCifraIndividual(arquivo) {
-
-    console.log("Cliquei na cifra:", arquivo);
-
-    if (!arquivo) return;
-
-    primeiraAberturaMusico = false;
-
-    try {
-
-        await renderizarPDF(arquivo, 1);
-
-        console.log("PDF carregado");
-
-    } catch (erro) {
-
-        console.error("Erro:", erro);
-
-    }
-}
     esconderBoasVindas();
 
     if (pagina < 1) pagina = 1;
@@ -660,6 +640,26 @@ btnSalvarEdicao?.addEventListener(
       "Cifra atualizada com sucesso!";
   }
 );
+async function abrirCifraIndividual(arquivo) {
+
+    console.log("Cliquei na cifra:", arquivo);
+
+    if (!arquivo) return;
+
+    primeiraAberturaMusico = false;
+
+    try {
+
+        await renderizarPDF(arquivo, 1);
+
+        console.log("PDF carregado");
+
+    } catch (erro) {
+
+        console.error("Erro:", erro);
+
+    }
+}
 if (listaCifrasMusico) {
 
     listaCifrasMusico.addEventListener(
