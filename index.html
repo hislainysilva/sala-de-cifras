@@ -179,9 +179,31 @@
   </div>
 
 </div>
-    <!-- PDF -->
-    <div id="tituloMusica"></div> 
-    <canvas id="pdfCanvas"></canvas>
+ <!-- ENSAIO INDIVIDUAL DO MÚSICO -->
+<div id="areaEnsaioIndividual" class="area-ensaio">
+  <label for="listaCifrasMusico">
+    🎼 Ensaio individual
+  </label>
+
+  <select id="listaCifrasMusico">
+    <option value="">Escolher uma cifra</option>
+  </select>
+</div>
+
+<!-- PLAYER DE ÁUDIO -->
+<div id="playerArea" class="player-area" style="display:none;">
+  <p>🎵 Áudio para ensaio</p>
+
+  <audio
+    id="audioPlayer"
+    controls
+    preload="metadata">
+  </audio>
+</div>
+
+<!-- PDF -->
+<div id="tituloMusica"></div>
+<canvas id="pdfCanvas"></canvas>
 
   </section>
 
