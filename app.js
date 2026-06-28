@@ -84,7 +84,20 @@ const tituloMusica =
 
 const telaBoasVindas =
     document.getElementById("telaBoasVindas");
+const listaCifrasMusico =
+    document.getElementById(
+        "listaCifrasMusico"
+    );
 
+const playerArea =
+    document.getElementById(
+        "playerArea"
+    );
+
+const audioPlayer =
+    document.getElementById(
+        "audioPlayer"
+    );
 const telaTransicao =
     document.getElementById("telaTransicao");
 
@@ -336,7 +349,8 @@ function juntarCifras() {
 
   todasCifras.sort((a, b) => a.nome.localeCompare(b.nome));
 
-  atualizarLista(todasCifras);
+ atualizarLista(todasCifras);
+atualizarListaMusico(todasCifras);
 }
 
 function atualizarLista(lista) {
@@ -359,7 +373,30 @@ option.dataset.nome = cifra.nome;
     pdfSelect.appendChild(option);
   }
 }
+function atualizarListaMusico(lista) {
 
+    if (!listaCifrasMusico)
+        return;
+
+    listaCifrasMusico.innerHTML =
+        '<option value="">Escolher uma cifra</option>';
+
+    lista.forEach(cifra => {
+
+        const option =
+            document.createElement("option");
+
+        option.value =
+            cifra.arquivo;
+
+        option.textContent =
+            cifra.nome;
+
+        listaCifrasMusico.appendChild(
+            option
+        );
+    });
+}
 function mostrarCifrasAdmin() {
   if (!painelAdmin) return;
 
@@ -457,6 +494,22 @@ if(cifraAtual && tituloMusica){
 
     tituloMusica.style.display =
         "block";
+}
+      async function abrirCifraIndividual(
+    arquivo
+) {
+
+    if (!arquivo)
+        return;
+
+    await renderizarPDF(
+        arquivo,
+        1
+    );
+
+    carregarAudio(
+        arquivo
+    );
 }
     esconderBoasVindas();
 
@@ -603,7 +656,22 @@ btnSalvarEdicao?.addEventListener(
       "Cifra atualizada com sucesso!";
   }
 );
+if (listaCifrasMusico) {
 
+    listaCifrasMusico
+        .addEventListener(
+            "change",
+            async function() {
+
+                if (!this.value)
+                    return;
+
+                await abrirCifraIndividual(
+                    this.value
+                );
+            }
+        );
+}
 iniciarLogin();
 carregarCifrasFixas();
 carregarCifrasAdmin();
