@@ -122,6 +122,44 @@ let todasCifras = [];
 let idCifraEditando = null;
 let arquivoCifraEditando = null;
 
+function carregarAudio(arquivoPdf) {
+
+    if (!audioPlayer || !playerArea)
+        return;
+
+    const arquivoMp3 =
+        arquivoPdf.replace(
+            ".pdf",
+            ".mp3"
+        );
+
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+
+    audioPlayer.src =
+        `/audios/${arquivoMp3}`;
+
+    audioPlayer.load();
+
+    playerArea.style.display =
+        "block";
+
+    audioPlayer.onerror = () => {
+
+        playerArea.style.display =
+            "none";
+
+        console.log(
+            "Áudio não encontrado"
+        );
+    };
+
+    console.log(
+        "Carregando áudio:",
+        arquivoMp3
+    );
+}
+
 function mostrarBoasVindas() {
   if (modoMusico && telaBoasVindas) {
     telaBoasVindas.style.display = "flex";
