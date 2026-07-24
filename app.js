@@ -179,7 +179,6 @@ function pararAudioEnsaio() {
   }
 }
 
-javascript
 function mostrarBoasVindas() {
   if (modoMusico && telaBoasVindas) {
     telaBoasVindas.style.display = "flex";
