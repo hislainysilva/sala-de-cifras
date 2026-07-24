@@ -402,7 +402,6 @@ async function carregarCifrasFixas() {
   }
 }
 
-javascript
 function carregarCifrasAdmin() {
   onValue(
     ref(db, "cifras"),
