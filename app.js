@@ -445,6 +445,10 @@ function juntarCifras() {
 
   todasCifras.sort((a, b) => a.nome.localeCompare(b.nome));
 
+  console.log("Cifras JSON:", cifrasFixas);
+console.log("Cifras Firebase:", cifrasAdmin);
+console.log("Todas:", todasCifras);
+  
  atualizarLista(todasCifras);
 atualizarListaMusico(todasCifras);
 }
