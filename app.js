@@ -1,3 +1,4 @@
+```javascript
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getDatabase,
@@ -52,67 +53,57 @@ const nomeNovaCifra = document.getElementById("nomeNovaCifra");
 const arquivoNovaCifra = document.getElementById("arquivoNovaCifra");
 const btnAdicionarCifra = document.getElementById("btnAdicionarCifra");
 const mensagemAdmin = document.getElementById("mensagemAdmin");
+
 const modalEditar =
-    document.getElementById(
-        "modalEditar"
-    );
+  document.getElementById("modalEditar");
 
 const novoNomeCifra =
-    document.getElementById(
-        "novoNomeCifra"
-    );
+  document.getElementById("novoNomeCifra");
 
 const btnSalvarEdicao =
-    document.getElementById(
-        "btnSalvarEdicao"
-    );
+  document.getElementById("btnSalvarEdicao");
 
 const btnCancelarEdicao =
-    document.getElementById(
-        "btnCancelarEdicao"
-    );
+  document.getElementById("btnCancelarEdicao");
+
 const infoPagina =
-    document.getElementById("infoPagina");
+  document.getElementById("infoPagina");
+
 const statusConexao =
-    document.getElementById(
-        "statusConexao"
-    );
+  document.getElementById("statusConexao");
+
 const relogio =
-    document.getElementById("relogio");
+  document.getElementById("relogio");
+
 const tituloMusica =
-    document.getElementById("tituloMusica");
+  document.getElementById("tituloMusica");
 
 const telaBoasVindas =
-    document.getElementById("telaBoasVindas");
+  document.getElementById("telaBoasVindas");
+
 const listaCifrasMusico =
-    document.getElementById(
-        "listaCifrasMusico"
-    );
+  document.getElementById("listaCifrasMusico");
 
 const playerArea =
-    document.getElementById(
-        "playerArea"
-    );
+  document.getElementById("playerArea");
 
 const audioPlayer =
-    document.getElementById(
-        "audioPlayer"
-    );
+  document.getElementById("audioPlayer");
+
 const btnVoltarAoVivo =
-    document.getElementById(
-        "btnVoltarAoVivo"
-    );
+  document.getElementById("btnVoltarAoVivo");
+
 const telaTransicao =
-    document.getElementById("telaTransicao");
+  document.getElementById("telaTransicao");
 
 const nomeTransicao =
-    document.getElementById("nomeTransicao");
+  document.getElementById("nomeTransicao");
 
 const canvas =
-    document.getElementById("pdfCanvas");
+  document.getElementById("pdfCanvas");
 
 const ctx =
-    canvas.getContext("2d");
+  canvas.getContext("2d");
 
 let pdfDoc = null;
 let ultimoEstado = null;
@@ -124,77 +115,71 @@ let arquivoCifraEditando = null;
 let wakeLock = null;
 
 async function manterTelaLigada() {
+  try {
+    if ("wakeLock" in navigator) {
+      wakeLock =
+        await navigator.wakeLock.request("screen");
 
-    try {
+      console.log("Tela mantida ligada.");
 
-        if ("wakeLock" in navigator) {
-
-            wakeLock =
-                await navigator.wakeLock.request(
-                    "screen"
-                );
-
-            console.log(
-                "Tela mantida ligada."
-            );
-
-            wakeLock.addEventListener(
-                "release",
-                () => {
-                    console.log(
-                        "Wake Lock liberado."
-                    );
-                }
-            );
+      wakeLock.addEventListener(
+        "release",
+        () => {
+          console.log("Wake Lock liberado.");
         }
-
-    } catch (erro) {
-
-        console.error(
-            "Erro no Wake Lock:",
-            erro
-        );
+      );
     }
+  } catch (erro) {
+    console.error(
+      "Erro no Wake Lock:",
+      erro
+    );
+  }
 }
 
 function carregarAudio(arquivoPdf) {
+  if (!audioPlayer || !playerArea) {
+    return;
+  }
 
-    if (!audioPlayer || !playerArea)
-        return;
-
-    const arquivoMp3 =
-        arquivoPdf.replace(
-            ".pdf",
-            ".mp3"
-        );
-
-    audioPlayer.pause();
-    audioPlayer.currentTime = 0;
-
-    audioPlayer.src =
-        `/audios/${arquivoMp3}`;
-
-    audioPlayer.load();
-
-    playerArea.style.display =
-        "block";
-
-    audioPlayer.onerror = () => {
-
-        playerArea.style.display =
-            "none";
-
-        console.log(
-            "Áudio não encontrado"
-        );
-    };
-
-    console.log(
-        "Carregando áudio:",
-        arquivoMp3
+  const arquivoMp3 =
+    arquivoPdf.replace(
+      ".pdf",
+      ".mp3"
     );
+
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
+  audioPlayer.src = `/audios/${arquivoMp3}`;
+  audioPlayer.load();
+
+  playerArea.style.display = "block";
+
+  audioPlayer.onerror = () => {
+    playerArea.style.display = "none";
+    console.log("Áudio não encontrado");
+  };
+
+  console.log(
+    "Carregando áudio:",
+    arquivoMp3
+  );
 }
 
+function pararAudioEnsaio() {
+  if (audioPlayer) {
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+    audioPlayer.removeAttribute("src");
+    audioPlayer.load();
+  }
+
+  if (playerArea) {
+    playerArea.style.display = "none";
+  }
+}
+
+javascript
 function mostrarBoasVindas() {
   if (modoMusico && telaBoasVindas) {
     telaBoasVindas.style.display = "flex";
@@ -214,407 +199,623 @@ function esconderBoasVindas() {
     canvas.style.display = "block";
   }
 }
-function abrirTransicao(nome) {
 
+function abrirTransicao(nome) {
   if (!modoMusico) return;
 
-  if (!telaTransicao || !nomeTransicao)
+  if (!telaTransicao || !nomeTransicao) {
     return;
+  }
 
-  // esconde a cifra antiga
   if (canvas) {
     canvas.style.visibility = "hidden";
   }
 
-  // atualiza o nome da próxima música
   nomeTransicao.innerText =
     nome || "Próximo Louvor";
 
-  // exibe a tela de transição
   telaTransicao.classList.add("ativa");
 }
 
 async function fecharTransicao() {
-
-  if (!modoMusico) return;
-
-  if (!telaTransicao)
+  if (!modoMusico || !telaTransicao) {
     return;
+  }
 
-  // mantém a tela visível por 1,2s
   await new Promise(resolve =>
     setTimeout(resolve, 1200)
   );
 
-  // inicia o fade-out
   telaTransicao.classList.remove("ativa");
 
-  // aguarda o fade terminar
   await new Promise(resolve =>
     setTimeout(resolve, 300)
   );
 
-  // mostra a nova cifra já carregada
   if (canvas) {
     canvas.style.visibility = "visible";
   }
 }
-function configurarInterface() {
-  document.body.classList.remove("modo-lider", "modo-admin", "modo-musico");
 
-  painelAdmin.style.display = "none";
-  painelLider.style.display = "none";
+function configurarInterface() {
+  document.body.classList.remove(
+    "modo-lider",
+    "modo-admin",
+    "modo-musico"
+  );
+
+  if (painelAdmin) {
+    painelAdmin.style.display = "none";
+  }
+
+  if (painelLider) {
+    painelLider.style.display = "none";
+  }
 
   if (modoLider) {
     document.body.classList.add("modo-lider");
-    tituloPainel.innerText = "Painel do Líder";
-    painelLider.style.display = "block";
+
+    if (tituloPainel) {
+      tituloPainel.innerText =
+        "Painel do Líder";
+    }
+
+    if (painelLider) {
+      painelLider.style.display = "block";
+    }
+
     esconderBoasVindas();
+
   } else if (modoAdmin) {
     document.body.classList.add("modo-admin");
-    tituloPainel.innerText = "Administração";
-    painelAdmin.style.display = "block";
+
+    if (tituloPainel) {
+      tituloPainel.innerText =
+        "Administração";
+    }
+
+    if (painelAdmin) {
+      painelAdmin.style.display = "block";
+    }
+
     esconderBoasVindas();
+
   } else {
     document.body.classList.add("modo-musico");
-    tituloPainel.innerText = "Painel do Músico";
+
+    if (tituloPainel) {
+      tituloPainel.innerText =
+        "Painel do Músico";
+    }
+
     mostrarBoasVindas();
   }
 }
 
 function liberarAcesso() {
+  if (telaLogin) {
+    telaLogin.style.display = "none";
+  }
 
-    telaLogin.style.display =
-        "none";
+  configurarInterface();
 
-    configurarInterface();
-
-    if (modoMusico) {
-        manterTelaLigada();
-    }
+  if (modoMusico) {
+    manterTelaLigada();
+  }
 }
+
 document.addEventListener(
-    "visibilitychange",
-    async () => {
-
-        if (
-            document.visibilityState ===
-            "visible" &&
-            modoMusico
-        ) {
-
-            await manterTelaLigada();
-        }
+  "visibilitychange",
+  async () => {
+    if (
+      document.visibilityState === "visible" &&
+      modoMusico
+    ) {
+      await manterTelaLigada();
     }
+  }
 );
+
 function atualizarStatusConexao() {
+  const textoConexao =
+    document.getElementById("textoConexao");
 
-    const textoConexao =
-        document.getElementById("textoConexao");
+  if (!textoConexao || !statusConexao) {
+    return;
+  }
 
-    if (!textoConexao || !statusConexao)
-        return;
+  if (navigator.onLine) {
+    textoConexao.innerText =
+      "🟢 Conectado";
 
-    if (navigator.onLine) {
+    statusConexao.classList.remove(
+      "offline"
+    );
+  } else {
+    textoConexao.innerText =
+      "🔴 Reconectando...";
 
-        textoConexao.innerText =
-            "🟢 Conectado";
-
-        statusConexao.classList.remove(
-            "offline"
-        );
-
-    } else {
-
-        textoConexao.innerText =
-            "🔴 Reconectando...";
-
-        statusConexao.classList.add(
-            "offline"
-        );
-    }
+    statusConexao.classList.add(
+      "offline"
+    );
+  }
 }
- function atualizarRelogio() {
 
-    if (!relogio)
-        return;
+function atualizarRelogio() {
+  if (!relogio) {
+    return;
+  }
 
-    const agora = new Date();
+  const agora = new Date();
 
-    const horas =
-        String(
-            agora.getHours()
-        ).padStart(2, "0");
+  const horas =
+    String(
+      agora.getHours()
+    ).padStart(2, "0");
 
-    const minutos =
-        String(
-            agora.getMinutes()
-        ).padStart(2, "0");
+  const minutos =
+    String(
+      agora.getMinutes()
+    ).padStart(2, "0");
 
-    relogio.innerText =
-        `${horas}:${minutos}`;
+  relogio.innerText =
+    `${horas}:${minutos}`;
 }
 
 atualizarRelogio();
 
 setInterval(
-    atualizarRelogio,
-    1000
+  atualizarRelogio,
+  1000
 );
 
 window.addEventListener(
-    "online",
-    atualizarStatusConexao
+  "online",
+  atualizarStatusConexao
 );
 
 window.addEventListener(
-    "offline",
-    atualizarStatusConexao
+  "offline",
+  atualizarStatusConexao
 );
 
 atualizarStatusConexao();
+
 function iniciarLogin() {
   if (modoLider || modoAdmin) {
-    telaLogin.style.display = "flex";
+    if (telaLogin) {
+      telaLogin.style.display = "flex";
+    }
 
-    tituloLogin.innerText = modoLider
-      ? "Acesso do Líder"
-      : "Acesso do Administrador";
+    if (tituloLogin) {
+      tituloLogin.innerText =
+        modoLider
+          ? "Acesso do Líder"
+          : "Acesso do Administrador";
+    }
 
-    btnEntrarLogin.addEventListener("click", () => {
-      const senhaDigitada = senhaLogin.value;
+    btnEntrarLogin?.addEventListener(
+      "click",
+      () => {
+        const senhaDigitada =
+          senhaLogin?.value || "";
 
-      if (modoLider && senhaDigitada === SENHA_LIDER) {
-        liberarAcesso();
-      } else if (modoAdmin && senhaDigitada === SENHA_ADMIN) {
-        liberarAcesso();
-      } else {
-        erroLogin.innerText = "Senha incorreta!";
+        if (
+          modoLider &&
+          senhaDigitada === SENHA_LIDER
+        ) {
+          liberarAcesso();
+
+        } else if (
+          modoAdmin &&
+          senhaDigitada === SENHA_ADMIN
+        ) {
+          liberarAcesso();
+
+        } else if (erroLogin) {
+          erroLogin.innerText =
+            "Senha incorreta!";
+        }
       }
-    });
+    );
 
-    senhaLogin.addEventListener("keydown", (evento) => {
-      if (evento.key === "Enter") {
-        btnEntrarLogin.click();
+    senhaLogin?.addEventListener(
+      "keydown",
+      evento => {
+        if (evento.key === "Enter") {
+          btnEntrarLogin?.click();
+        }
       }
-    });
+    );
+
   } else {
-    telaLogin.style.display = "none";
+    if (telaLogin) {
+      telaLogin.style.display = "none";
+    }
+
     liberarAcesso();
   }
 }
 
 async function carregarCifrasFixas() {
   try {
-    const resposta = await fetch("/cifras.json");
-    cifrasFixas = await resposta.json();
+    const resposta =
+      await fetch("/cifras.json");
+
+    if (!resposta.ok) {
+      throw new Error(
+        `Erro HTTP ${resposta.status}`
+      );
+    }
+
+    const dados =
+      await resposta.json();
+
+    cifrasFixas =
+      Array.isArray(dados)
+        ? dados
+        : [];
+
     juntarCifras();
+
   } catch (erro) {
-    console.error("Erro ao carregar cifras.json:", erro);
+    console.error(
+      "Erro ao carregar cifras.json:",
+      erro
+    );
+
     cifrasFixas = [];
     juntarCifras();
   }
 }
 
+javascript
 function carregarCifrasAdmin() {
-  onValue(ref(db, "cifras"), (snapshot) => {
-    const dados = snapshot.val();
+  onValue(
+    ref(db, "cifras"),
+    snapshot => {
+      const dados = snapshot.val();
 
-    if (!dados) {
-      cifrasAdmin = [];
-    } else {
-      cifrasAdmin = Object.entries(dados).map(([id, cifra]) => ({
-        id,
-        ...cifra,
-        origem: "admin"
-      }));
+      if (!dados) {
+        cifrasAdmin = [];
+      } else {
+        cifrasAdmin =
+          Object.entries(dados).map(
+            ([id, cifra]) => ({
+              id,
+              ...cifra,
+              origem: "admin"
+            })
+          );
+      }
+
+      juntarCifras();
+      mostrarCifrasAdmin();
     }
-
-    juntarCifras();
-    mostrarCifrasAdmin();
-  });
+  );
 }
 
 function juntarCifras() {
-  const fixasComOrigem = cifrasFixas.map(cifra => ({
-    ...cifra,
-    origem: "json"
-  }));
+  const fixasComOrigem =
+    cifrasFixas.map(cifra => ({
+      ...cifra,
+      origem: "json"
+    }));
 
-  todasCifras = [...fixasComOrigem, ...cifrasAdmin];
+  todasCifras = [
+    ...fixasComOrigem,
+    ...cifrasAdmin
+  ];
 
-  todasCifras.sort((a, b) => a.nome.localeCompare(b.nome));
+  todasCifras.sort(
+    (a, b) =>
+      a.nome.localeCompare(b.nome)
+  );
 
-  console.log("Cifras JSON:", cifrasFixas);
-console.log("Cifras Firebase:", cifrasAdmin);
-console.log("Todas:", todasCifras);
-  
- atualizarLista(todasCifras);
-atualizarListaMusico(todasCifras);
+  atualizarLista(todasCifras);
+  atualizarListaMusico(todasCifras);
 }
 
 function atualizarLista(lista) {
-  if (!pdfSelect) return;
+  if (!pdfSelect) {
+    return;
+  }
 
   pdfSelect.innerHTML = "";
 
   lista.forEach(cifra => {
-    const option = document.createElement("option");
-   option.value = cifra.arquivo;
-option.textContent = cifra.nome;
-option.dataset.nome = cifra.nome;
+    const option =
+      document.createElement("option");
+
+    option.value = cifra.arquivo;
+    option.textContent = cifra.nome;
+    option.dataset.nome = cifra.nome;
+
     pdfSelect.appendChild(option);
   });
 
   if (lista.length === 0) {
-    const option = document.createElement("option");
-    option.textContent = "Nenhuma cifra encontrada";
+    const option =
+      document.createElement("option");
+
+    option.textContent =
+      "Nenhuma cifra encontrada";
+
     option.disabled = true;
+
     pdfSelect.appendChild(option);
   }
 }
+
 function atualizarListaMusico(lista) {
-
-    if (!listaCifrasMusico)
-        return;
-
-    listaCifrasMusico.innerHTML =
-        '<option value="">Escolher uma cifra</option>';
-
-    lista.forEach(cifra => {
-
-        const option =
-            document.createElement("option");
-
-        option.value =
-            cifra.arquivo;
-
-        option.textContent =
-            cifra.nome;
-
-        listaCifrasMusico.appendChild(
-            option
-        );
-    });
-}
-function mostrarCifrasAdmin() {
-  if (!painelAdmin) return;
-
-  let listaAdmin = document.getElementById("listaCifrasAdmin");
-
-  if (!listaAdmin) {
-    listaAdmin = document.createElement("div");
-    listaAdmin.id = "listaCifrasAdmin";
-    painelAdmin.appendChild(listaAdmin);
+  if (!listaCifrasMusico) {
+    return;
   }
 
-  listaAdmin.innerHTML = "<h3>Cifras adicionadas pelo Admin</h3>";
+  listaCifrasMusico.innerHTML =
+    '<option value="">Escolher uma cifra</option>';
+
+  lista.forEach(cifra => {
+    const option =
+      document.createElement("option");
+
+    option.value = cifra.arquivo;
+    option.textContent = cifra.nome;
+
+    listaCifrasMusico.appendChild(
+      option
+    );
+  });
+}
+
+function mostrarCifrasAdmin() {
+  if (!painelAdmin) {
+    return;
+  }
+
+  let listaAdmin =
+    document.getElementById(
+      "listaCifrasAdmin"
+    );
+
+  if (!listaAdmin) {
+    listaAdmin =
+      document.createElement("div");
+
+    listaAdmin.id =
+      "listaCifrasAdmin";
+
+    painelAdmin.appendChild(
+      listaAdmin
+    );
+  }
+
+  listaAdmin.innerHTML =
+    "<h3>Cifras adicionadas pelo Admin</h3>";
 
   if (cifrasAdmin.length === 0) {
-    listaAdmin.innerHTML += "<p>Nenhuma cifra adicionada pelo Admin.</p>";
+    listaAdmin.innerHTML +=
+      "<p>Nenhuma cifra adicionada pelo Admin.</p>";
+
     return;
   }
 
   cifrasAdmin.forEach(cifra => {
-    const item = document.createElement("div");
-    item.className = "item-cifra-admin";
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "item-cifra-admin";
 
     item.innerHTML = `
       <span>${cifra.nome}</span>
-      <button class="btn-editar" data-id="${cifra.id}">Editar</button>
-      <button class="btn-excluir" data-id="${cifra.id}">Excluir</button>
+      <button class="btn-editar" data-id="${cifra.id}">
+        Editar
+      </button>
+      <button class="btn-excluir" data-id="${cifra.id}">
+        Excluir
+      </button>
     `;
 
     listaAdmin.appendChild(item);
   });
 
-  document.querySelectorAll(".btn-editar").forEach(botao => {
-    botao.addEventListener("click", () => {
-      const id = botao.getAttribute("data-id");
-      const cifra = cifrasAdmin.find(c => c.id === id);
+  document
+    .querySelectorAll(".btn-editar")
+    .forEach(botao => {
+      botao.addEventListener(
+        "click",
+        () => {
+          const id =
+            botao.getAttribute(
+              "data-id"
+            );
 
-      if (!cifra) return;
+          const cifra =
+            cifrasAdmin.find(
+              item => item.id === id
+            );
 
-      idCifraEditando = cifra.id;
-      arquivoCifraEditando = cifra.arquivo;
+          if (!cifra) {
+            return;
+          }
 
-      novoNomeCifra.value = cifra.nome;
-      modalEditar.style.display = "flex";
-      novoNomeCifra.focus();
+          idCifraEditando =
+            cifra.id;
+
+          arquivoCifraEditando =
+            cifra.arquivo;
+
+          if (novoNomeCifra) {
+            novoNomeCifra.value =
+              cifra.nome;
+          }
+
+          if (modalEditar) {
+            modalEditar.style.display =
+              "flex";
+          }
+
+          novoNomeCifra?.focus();
+        }
+      );
     });
-  });
 
-  document.querySelectorAll(".btn-excluir").forEach(botao => {
-    botao.addEventListener("click", async () => {
-      const id = botao.getAttribute("data-id");
+  document
+    .querySelectorAll(".btn-excluir")
+    .forEach(botao => {
+      botao.addEventListener(
+        "click",
+        async () => {
+          const id =
+            botao.getAttribute(
+              "data-id"
+            );
 
-      const confirmar = confirm("Tem certeza que deseja excluir esta cifra?");
-      if (!confirmar) return;
+          const confirmar =
+            confirm(
+              "Tem certeza que deseja excluir esta cifra?"
+            );
 
-      await remove(ref(db, "cifras/" + id));
-      mensagemAdmin.innerText = "Cifra excluída com sucesso!";
+          if (!confirmar) {
+            return;
+          }
+
+          await remove(
+            ref(
+              db,
+              `cifras/${id}`
+            )
+          );
+
+          if (mensagemAdmin) {
+            mensagemAdmin.innerText =
+              "Cifra excluída com sucesso!";
+          }
+        }
+      );
     });
-  });
 }
 
-if (btnAdicionarCifra) {
-  btnAdicionarCifra.addEventListener("click", async () => {
-    const nome = nomeNovaCifra.value.trim();
-    const arquivo = arquivoNovaCifra.value.trim();
+btnAdicionarCifra?.addEventListener(
+  "click",
+  async () => {
+    const nome =
+      nomeNovaCifra?.value.trim() || "";
+
+    const arquivo =
+      arquivoNovaCifra?.value.trim() || "";
 
     if (!nome || !arquivo) {
-      mensagemAdmin.innerText = "Preencha o nome da música e o nome do PDF.";
+      if (mensagemAdmin) {
+        mensagemAdmin.innerText =
+          "Preencha o nome da música e o nome do PDF.";
+      }
+
       return;
     }
 
-    await push(ref(db, "cifras"), {
-      nome,
-      arquivo
-    });
-
-    nomeNovaCifra.value = "";
-    arquivoNovaCifra.value = "";
-
-    mensagemAdmin.innerText =
-      "Cifra adicionada com sucesso!";
-  });
-}
-async function renderizarPDF(arquivo, pagina) {
-    try {
-    pdfDoc = await pdfjsLib.getDocument(`/pdfs/${arquivo}`).promise;
-const cifraAtual =
-    todasCifras.find(
-        c => c.arquivo === arquivo
+    await push(
+      ref(db, "cifras"),
+      {
+        nome,
+        arquivo
+      }
     );
 
-if(cifraAtual && tituloMusica){
+    if (nomeNovaCifra) {
+      nomeNovaCifra.value = "";
+    }
 
-    tituloMusica.innerText =
+    if (arquivoNovaCifra) {
+      arquivoNovaCifra.value = "";
+    }
+
+    if (mensagemAdmin) {
+      mensagemAdmin.innerText =
+        "Cifra adicionada com sucesso!";
+    }
+  }
+);
+
+async function renderizarPDF(
+  arquivo,
+  pagina
+) {
+  try {
+    pdfDoc =
+      await pdfjsLib
+        .getDocument(
+          `/pdfs/${arquivo}`
+        )
+        .promise;
+
+    const cifraAtual =
+      todasCifras.find(
+        cifra =>
+          cifra.arquivo === arquivo
+      );
+
+    if (
+      cifraAtual &&
+      tituloMusica
+    ) {
+      tituloMusica.innerText =
         cifraAtual.nome;
 
-    tituloMusica.style.display =
+      tituloMusica.style.display =
         "block";
-}
+    }
+
     esconderBoasVindas();
 
-    if (pagina < 1) pagina = 1;
-    if (pagina > pdfDoc.numPages) pagina = pdfDoc.numPages;
+    if (pagina < 1) {
+      pagina = 1;
+    }
 
-    const page = await pdfDoc.getPage(pagina);
-    const viewport = page.getViewport({ scale: 1.5 });
+    if (
+      pagina > pdfDoc.numPages
+    ) {
+      pagina =
+        pdfDoc.numPages;
+    }
 
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
+    const page =
+      await pdfDoc.getPage(
+        pagina
+      );
+
+    const viewport =
+      page.getViewport({
+        scale: 1.5
+      });
+
+    canvas.height =
+      viewport.height;
+
+    canvas.width =
+      viewport.width;
 
     await page.render({
       canvasContext: ctx,
       viewport
     }).promise;
 
-    infoPagina.innerText = `Página ${pagina} de ${pdfDoc.numPages}`;
+    if (infoPagina) {
+      infoPagina.innerText =
+        `Página ${pagina} de ${pdfDoc.numPages}`;
+    }
+
   } catch (erro) {
-    console.error("Erro ao carregar PDF:", erro);
-    infoPagina.innerText = "Erro ao carregar a cifra.";
+    console.error(
+      "Erro ao carregar PDF:",
+      erro
+    );
+
+    if (infoPagina) {
+      infoPagina.innerText =
+        "Erro ao carregar a cifra.";
+    }
 
     if (modoMusico) {
       mostrarBoasVindas();
@@ -622,109 +823,170 @@ if(cifraAtual && tituloMusica){
   }
 }
 
-if (btnAbrir) {
-  btnAbrir.addEventListener("click", async () => {
-    if (!pdfSelect.value) return;
+btnAbrir?.addEventListener(
+  "click",
+  async () => {
+    if (!pdfSelect?.value) {
+      return;
+    }
 
-    await set(ref(db, "sala"), {
-      pdf: pdfSelect.value,
-      pagina: 1
-    });
-  });
-}
+    await set(
+      ref(db, "sala"),
+      {
+        pdf: pdfSelect.value,
+        pagina: 1
+      }
+    );
+  }
+);
 
-if (btnAnterior) {
-  btnAnterior.addEventListener("click", async () => {
-    if (!ultimoEstado) return;
+btnAnterior?.addEventListener(
+  "click",
+  async () => {
+    if (!ultimoEstado) {
+      return;
+    }
 
-    const atual = ultimoEstado.pagina || 1;
-    if (atual <= 1) return;
+    const atual =
+      ultimoEstado.pagina || 1;
 
-    await set(ref(db, "sala"), {
-      pdf: ultimoEstado.pdf,
-      pagina: atual - 1
-    });
-  });
-}
+    if (atual <= 1) {
+      return;
+    }
 
-if (btnProxima) {
-  btnProxima.addEventListener("click", async () => {
-    if (!ultimoEstado) return;
+    await set(
+      ref(db, "sala"),
+      {
+        pdf: ultimoEstado.pdf,
+        pagina: atual - 1
+      }
+    );
+  }
+);
 
-    const atual = ultimoEstado.pagina || 1;
+btnProxima?.addEventListener(
+  "click",
+  async () => {
+    if (!ultimoEstado) {
+      return;
+    }
 
-    await set(ref(db, "sala"), {
-      pdf: ultimoEstado.pdf,
-      pagina: atual + 1
-    });
-  });
-}
+    const atual =
+      ultimoEstado.pagina || 1;
+
+    await set(
+      ref(db, "sala"),
+      {
+        pdf: ultimoEstado.pdf,
+        pagina: atual + 1
+      }
+    );
+  }
+);
 
 let primeiraAberturaMusico = true;
 
-onValue(ref(db, "sala"), async (snapshot) => {
-  const dados = snapshot.val();
+onValue(
+  ref(db, "sala"),
+  async snapshot => {
+    const dados =
+      snapshot.val();
 
-  if (!dados) return;
+    if (!dados) {
+      return;
+    }
 
-  const mudouCifra =
-    ultimoEstado &&
-    ultimoEstado.pdf !== dados.pdf;
+    const mudouCifra =
+      ultimoEstado &&
+      ultimoEstado.pdf !== dados.pdf;
 
-  ultimoEstado = dados;
+    ultimoEstado = dados;
 
-  if (modoMusico && primeiraAberturaMusico) {
-    primeiraAberturaMusico = false;
+    if (
+      modoMusico &&
+      primeiraAberturaMusico
+    ) {
+      primeiraAberturaMusico =
+        false;
 
-    mostrarBoasVindas();
+      mostrarBoasVindas();
 
-    setTimeout(async () => {
-      await renderizarPDF(dados.pdf, dados.pagina);
-    }, 3000);
+      setTimeout(
+        async () => {
+          await renderizarPDF(
+            dados.pdf,
+            dados.pagina
+          );
+        },
+        3000
+      );
 
-    return;
-  }
+      return;
+    }
 
-  if (modoMusico && mudouCifra) {
-    const cifraAtual = todasCifras.find(
-      cifra => cifra.arquivo === dados.pdf
+    if (
+      modoMusico &&
+      mudouCifra
+    ) {
+      pararAudioEnsaio();
+
+      if (listaCifrasMusico) {
+        listaCifrasMusico.value = "";
+      }
+
+      const cifraAtual =
+        todasCifras.find(
+          cifra =>
+            cifra.arquivo === dados.pdf
+        );
+
+      abrirTransicao(
+        cifraAtual
+          ? cifraAtual.nome
+          : "Próximo Louvor"
+      );
+
+      await renderizarPDF(
+        dados.pdf,
+        dados.pagina
+      );
+
+      await fecharTransicao();
+
+      return;
+    }
+
+    await renderizarPDF(
+      dados.pdf,
+      dados.pagina
     );
-
-    abrirTransicao(
-      cifraAtual ? cifraAtual.nome : "Próximo Louvor"
-    );
-
-    await renderizarPDF(dados.pdf, dados.pagina);
-
-    await fecharTransicao();
-
-    return;
   }
+);
 
-  await renderizarPDF(dados.pdf, dados.pagina);
-});
 btnCancelarEdicao?.addEventListener(
   "click",
   () => {
-    modalEditar.style.display =
-      "none";
+    if (modalEditar) {
+      modalEditar.style.display =
+        "none";
+    }
   }
 );
 
 btnSalvarEdicao?.addEventListener(
   "click",
   async () => {
-
     const nome =
-      novoNomeCifra.value.trim();
+      novoNomeCifra?.value.trim() || "";
 
-    if (!nome) return;
+    if (!nome) {
+      return;
+    }
 
     await set(
       ref(
         db,
-        "cifras/" +
-        idCifraEditando
+        `cifras/${idCifraEditando}`
       ),
       {
         nome,
@@ -733,62 +995,81 @@ btnSalvarEdicao?.addEventListener(
       }
     );
 
-    modalEditar.style.display =
-      "none";
+    if (modalEditar) {
+      modalEditar.style.display =
+        "none";
+    }
 
-    mensagemAdmin.innerText =
-      "Cifra atualizada com sucesso!";
+    if (mensagemAdmin) {
+      mensagemAdmin.innerText =
+        "Cifra atualizada com sucesso!";
+    }
   }
 );
-async function abrirCifraIndividual(arquivo) {
 
-    console.log("Cliquei na cifra:", arquivo);
+async function abrirCifraIndividual(
+  arquivo
+) {
+  if (!arquivo) {
+    return;
+  }
 
-    if (!arquivo) return;
+  primeiraAberturaMusico =
+    false;
 
-    primeiraAberturaMusico = false;
+  try {
+    await renderizarPDF(
+      arquivo,
+      1
+    );
 
-    try {
+    carregarAudio(
+      arquivo
+    );
 
-        await renderizarPDF(arquivo, 1);
-      
-      carregarAudio(arquivo);
+  } catch (erro) {
+    console.error(
+      "Erro ao abrir cifra individual:",
+      erro
+    );
+  }
+}
 
-        console.log("PDF carregado");
-
-    } catch (erro) {
-
-        console.error("Erro:", erro);
-
+listaCifrasMusico?.addEventListener(
+  "change",
+  async function () {
+    if (!this.value) {
+      return;
     }
-}
-if (listaCifrasMusico) {
 
-    listaCifrasMusico.addEventListener(
-        "change",
-        async function () {
-
-            if (!this.value) return;
-
-            await abrirCifraIndividual(this.value);
-        }
+    await abrirCifraIndividual(
+      this.value
     );
-}
-if (btnVoltarAoVivo) {
-    btnVoltarAoVivo.addEventListener(
-        "click",
-        async () => {
-            if (!ultimoEstado || !ultimoEstado.pdf) return;
+  }
+);
 
-            await renderizarPDF(
-                ultimoEstado.pdf,
-                ultimoEstado.pagina || 1
-            );
+btnVoltarAoVivo?.addEventListener(
+  "click",
+  async () => {
+    if (
+      !ultimoEstado ||
+      !ultimoEstado.pdf
+    ) {
+      return;
+    }
 
-            listaCifrasMusico.value = "";
-        }
+    pararAudioEnsaio();
+
+    await renderizarPDF(
+      ultimoEstado.pdf,
+      ultimoEstado.pagina || 1
     );
-}
+
+    if (listaCifrasMusico) {
+      listaCifrasMusico.value = "";
+    }
+  }
+);
 
 iniciarLogin();
 carregarCifrasFixas();
