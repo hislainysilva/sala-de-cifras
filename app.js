@@ -150,7 +150,7 @@ function carregarAudio(arquivoPdf) {
 
   audioPlayer.pause();
   audioPlayer.currentTime = 0;
-  audioPlayer.src = `/audios/${arquivoMp3}`;
+  audioPlayer.src = "/audios/" + arquivoMp3;
   audioPlayer.load();
 
   playerArea.style.display = "block";
